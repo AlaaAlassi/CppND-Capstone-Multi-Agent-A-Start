@@ -12,15 +12,38 @@ int main(int argc, char **argv)
 {
     //construct a grid
     std::vector<CellData> map;
-    double cellSize = 20; //meters/cell
-    int xSize = 32;
-    int ySize = 32;
+    double cellSize = 25; //meters/cell
+    int xSize = 35;
+    int ySize = 21;
     for (int j = 0; j < ySize; j++)
     {
         for (int i = 0; i < xSize; i++)
         {
             int index = i + xSize * (j);
             map.emplace_back(i, j, index, cellSize);
+        }
+    }
+
+    int counter = 0;
+    int shelfStart = 77;
+    int shelfSize = 10;
+    int horizentalSpaceBetweenShelfs = 1;
+    int shelfPerRow = 0;
+    int numberOfConstructedShelfs = 2;
+    for(auto &cell:map){
+        if (cell.linearIndex >= shelfStart){
+            cell.value = CellValue::occupied;
+            counter++;
+            if(counter >= shelfSize){
+                shelfStart = cell.linearIndex+ 1 + horizentalSpaceBetweenShelfs;
+                counter = 0;
+                shelfPerRow++;
+            }
+            if(shelfPerRow >= numberOfConstructedShelfs){
+                cell.value = CellValue::emptey;
+                numberOfConstructedShelfs= numberOfConstructedShelfs+2;
+                shelfStart = cell.linearIndex+ 120;
+            }
         }
     }
     //create a gui window:
@@ -52,12 +75,23 @@ int main(int argc, char **argv)
                   LINE_8,
                   shift = 0);
 
-        circle(output,
+        if(cell.value == CellValue::occupied){
+             circle(output,
                centerOfCell,
-               1,
+               5,
+               Scalar(255, 0, 0),
+               FILLED,
+               LINE_8);
+        }else{
+               circle(output,
+               centerOfCell,
+               5,
                Scalar(0, 255, 0),
                FILLED,
                LINE_8);
+
+        }
+
 
         //display the image:
         imshow("Output", output);

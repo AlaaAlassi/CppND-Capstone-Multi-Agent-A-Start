@@ -1,6 +1,7 @@
 # pragma once
 #include<memory>
 
+enum CellValue {emptey,occupied,delivary,pickup};
 struct Cartesian2DPoint
 {
    Cartesian2DPoint(double x,double y): x(x),y(y){}
@@ -14,7 +15,7 @@ struct CellData
     unsigned int linearIndex;
     unsigned int rowIndex;
     unsigned int columnsIndex;
-    int value = 0;
+    CellValue value = CellValue::emptey;
     double cellSize;
     std::unique_ptr <Cartesian2DPoint> cartesianPosition;
 };
