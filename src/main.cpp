@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
     //construct a grid
     std::vector<CellData> map;
-    double cellSize = 40; //meters/cell
+    double cellSize = 20; //meters/cell
     int xSize = 32;
     int ySize = 32;
     for (int j = 0; j < ySize; j++)
