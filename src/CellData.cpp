@@ -7,7 +7,6 @@ CellData::CellData(unsigned int row, unsigned int col, unsigned int i, double ce
     double y = rowIndex * cellSize +  cellSize * 0.5;
     double x = columnsIndex * cellSize + cellSize * 0.5;
     cartesianPosition = std::make_unique<Cartesian2DPoint>(x, y);
-
     double p1_x = cartesianPosition->x - cellSize*0.5;
     double p1_y = cartesianPosition->y - cellSize*0.5;
     double p2_x = cartesianPosition->x + cellSize*0.5;
