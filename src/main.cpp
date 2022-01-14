@@ -20,7 +20,7 @@ int main(int argc, char **argv)
         for (int i = 0; i < xSize; i++)
         {
             int index = i + xSize * (j);
-            map.emplace_back(i, j, index, cellSize);
+            map.emplace_back(j, i, index, cellSize);
         }
     }
 
@@ -46,6 +46,18 @@ int main(int argc, char **argv)
             }
         }
     }
+
+    for(auto &cell:map){
+        if (cell.columnsIndex == 3){
+            cell.value = CellValue::occupied;
+        }
+    }
+
+
+
+
+
+
     //create a gui window:
     namedWindow("Output", 1);
 
@@ -64,7 +76,7 @@ int main(int argc, char **argv)
     int i = 0;
     for (auto const &cell : map)
     {
-        Point p1 = Point(cell.rowIndex * cellSize, cell.columnsIndex * cellSize);
+        Point p1 = Point(cell.columnsIndex * cellSize, cell.rowIndex * cellSize);
         Point p2 = Point(p1.x + cellSize, p1.y + cellSize);
         Point centerOfCell = Point(cell.cartesianPosition->x, cell.cartesianPosition->y);
         rectangle(output,
@@ -79,14 +91,14 @@ int main(int argc, char **argv)
              circle(output,
                centerOfCell,
                5,
-               Scalar(255, 0, 0),
+               Scalar(100, 100, 100),
                FILLED,
                LINE_8);
         }else{
                circle(output,
                centerOfCell,
                5,
-               Scalar(0, 255, 0),
+               Scalar(14, 92, 144),
                FILLED,
                LINE_8);
 
