@@ -24,30 +24,10 @@ int main(int argc, char **argv)
         }
     }
 
-    int counter = 0;
-    int shelfStart = 77;
-    int shelfSize = 10;
-    int horizentalSpaceBetweenShelfs = 1;
-    int shelfPerRow = 0;
-    int numberOfConstructedShelfs = 2;
     for(auto &cell:map){
-        if (cell.linearIndex >= shelfStart){
+        if (cell.rowIndex == 2 || cell.rowIndex == 6 || cell.rowIndex == 10 || cell.rowIndex == 14 || cell.rowIndex == 18){
             cell.value = CellValue::occupied;
-            counter++;
-            if(counter >= shelfSize){
-                shelfStart = cell.linearIndex+ 1 + horizentalSpaceBetweenShelfs;
-                counter = 0;
-                shelfPerRow++;
-            }
-            if(shelfPerRow >= numberOfConstructedShelfs){
-                cell.value = CellValue::emptey;
-                numberOfConstructedShelfs= numberOfConstructedShelfs+2;
-                shelfStart = cell.linearIndex+ 120;
-            }
         }
-    }
-
-    for(auto &cell:map){
         if (cell.columnsIndex == 1 || cell.columnsIndex == 2 || cell.columnsIndex == 4 || cell.columnsIndex == 5 ||
             cell.columnsIndex == 29 || cell.columnsIndex == 30 || cell.columnsIndex == 32 || cell.columnsIndex == 33){
             cell.value = CellValue::delivary;
