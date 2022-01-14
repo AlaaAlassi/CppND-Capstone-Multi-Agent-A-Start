@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
     //construct a grid
     std::vector<CellData> map;
-    double cellSize = 25; //meters/cell
+    double cellSize = 35; //meters/cell
     int xSize = 35;
     int ySize = 21;
     for (int j = 0; j < ySize; j++)
@@ -53,11 +53,6 @@ int main(int argc, char **argv)
         }
     }
 
-
-
-
-
-
     //create a gui window:
     namedWindow("Output", 1);
 
@@ -76,8 +71,8 @@ int main(int argc, char **argv)
     int i = 0;
     for (auto const &cell : map)
     {
-        Point p1 = Point(cell.columnsIndex * cellSize, cell.rowIndex * cellSize);
-        Point p2 = Point(p1.x + cellSize, p1.y + cellSize);
+        Point p1 = Point(cell.corners->first.x,cell.corners->first.y);
+        Point p2 = Point(cell.corners->second.x,cell.corners->second.y);
         Point centerOfCell = Point(cell.cartesianPosition->x, cell.cartesianPosition->y);
         rectangle(output,
                   p1,
