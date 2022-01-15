@@ -10,6 +10,12 @@ using namespace cv;
 const int MAX_MONITOR_LENGTH = 1080;
 const int MAX_MONITOR_WIDTH = 1920;
 
+struct Robot{
+    Robot(Cartesian2DPoint position): position(position){};
+    Cartesian2DPoint position;
+};
+
+
 int main(int argc, char **argv)
 {
     //construct a grid
@@ -35,7 +41,7 @@ int main(int argc, char **argv)
     {
         Point p1 = Point(cell.corners->first.x,cell.corners->first.y);
         Point p2 = Point(cell.corners->second.x,cell.corners->second.y);
-        Point centerOfCell = Point(cell.cartesianPosition->x, cell.cartesianPosition->y);
+        Point centerOfCell = Point(cell.cartesianPosition.x, cell.cartesianPosition.y);
 
 
         rectangle(output,
@@ -75,8 +81,31 @@ int main(int argc, char **argv)
 
 
         //display the image:
-        imshow("Output", output);
+        //imshow("Output", output);
     }
+    //Mat output2 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
+    Mat output3 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
+       for (auto const &cell : map)
+{
+
+Mat  output2 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
+    Robot rob1(cell.cartesianPosition);
+     Point p3 = Point(rob1.position.x,rob1.position.y);
+               circle(output2,
+               p3,
+               10,
+               Scalar(0, 0, 255),
+               FILLED,
+               LINE_8);
+
+    float opacity = 0.5;
+    cv::addWeighted(output, opacity,output2, 1-opacity, 0, output3);
+    imshow("Output", output3);
+    //imshow("Output", output);
+
+waitKey(33);
+}
+
     //wait for the user to press any key:
     waitKey(0);
 

@@ -4,9 +4,10 @@
 enum CellValue {emptey,occupied,delivary,pickup};
 struct Cartesian2DPoint
 {
+    Cartesian2DPoint(): x(0),y(0){}
    Cartesian2DPoint(double x,double y): x(x),y(y){}
-   const double x;
-   const double y;
+   double x;
+   double y;
 };
 
 struct CellData
@@ -17,6 +18,6 @@ struct CellData
     unsigned int columnsIndex;
     CellValue value = CellValue::emptey;
     double cellSize;
-    std::unique_ptr <Cartesian2DPoint> cartesianPosition;
+    Cartesian2DPoint cartesianPosition;
     std::unique_ptr<std::pair<Cartesian2DPoint,Cartesian2DPoint>> corners;
 };
