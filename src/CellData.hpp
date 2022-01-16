@@ -1,15 +1,8 @@
 # pragma once
 #include<memory>
+#include "Cartesian2DPoint.hpp"
 
 enum CellValue {emptey,occupied,delivary,pickup};
-struct Cartesian2DPoint
-{
-    Cartesian2DPoint(): x(0),y(0){}
-   Cartesian2DPoint(double x,double y): x(x),y(y){}
-   double x;
-   double y;
-};
-
 struct CellData
 {
     CellData(unsigned int row, unsigned int col, unsigned int i, double cellSize);
