@@ -71,7 +71,7 @@ void Graphics::loadBackgroundImg()
 {
     // create window
     _windowName = "Multi Agent A* Planner";
-    cv::namedWindow(_windowName, cv::WINDOW_NORMAL);
+    cv::namedWindow(_windowName, cv::WINDOW_AUTOSIZE);
 
     // load image and create copy to be used for semi-transparent overlay
     cv::Mat background = _mapImage;
@@ -102,5 +102,5 @@ void Graphics::drawTrafficObjects()
 
     // display background and overlay image
     cv::imshow(_windowName, _images.at(2));
-    cv::waitKey(33);
+    cv::waitKey(10);
 }
