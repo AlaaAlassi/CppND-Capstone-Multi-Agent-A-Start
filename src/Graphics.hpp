@@ -28,6 +28,7 @@ private:
     std::vector<cv::Mat> _images;
     cv::Mat _mapImage;
     double _cellSize;
+    std::mutex mtx;
 };
 
 #endif

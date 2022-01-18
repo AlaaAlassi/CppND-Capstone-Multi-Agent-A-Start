@@ -78,11 +78,11 @@ void Graphics::loadBackgroundImg()
     _images.push_back(background);         // first element is the original background
     _images.push_back(background.clone()); // second element will be the transparent overlay
     _images.push_back(background.clone()); // third element will be the result image for display
+
 }
 
 void Graphics::drawTrafficObjects()
 {
-    loadBackgroundImg();
     // reset images
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
@@ -90,7 +90,9 @@ void Graphics::drawTrafficObjects()
     // create overlay from all traffic objects
     for (auto &robot : _robots)
     {
+        std::unique_lock<std::mutex> uLock(mtx);
         Point rp = Point(robot->position.x,robot->position.y);
+        uLock.unlock();
         cv::Scalar robotColor = Scalar(0, 0, 255);
         cv::circle(_images.at(1), rp, _cellSize*0.5, robotColor, FILLED,LINE_8);
     }
