@@ -57,14 +57,11 @@ Graphics::Graphics(int windowLength,int windowWidth,std::vector<CellData> &map){
 
 void Graphics::simulate()
 {
-    /*while (true)
-    {
-        // sleep at every iteration to reduce CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
-        // update graphics
-        this->drawTrafficObjects();
-    }*/
+while (true)
+        {
+            drawTrafficObjects();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
 }
 
 void Graphics::loadBackgroundImg()

@@ -6,6 +6,8 @@
 #include "Graphics.hpp"
 #include <vector>
 #include <thread>
+#include <future>
+
 
 using namespace cv;
 
@@ -24,26 +26,18 @@ int main(int argc, char **argv)
     Graphics A = Graphics(windowLength, windowWidth, map);
     A._robots.push_back(rob1);
     A.loadBackgroundImg();
-    auto goal = map[10].cartesianPosition;
-    double stepDistance = 1;
-    std::thread t2(&Robot::trackGoalPosition, rob1, goal,stepDistance);
-    bool done = false;
-    int limit = 1;
-    int timer = 0;
-    int counter = 10;
-    while (!done || !(counter <= 0))
+    std::thread simulationThread(&Graphics::simulate, &A);
+    Cartesian2DPoint goal;
+    for (auto const &cell : map)
     {
-        A.drawTrafficObjects();
-        if(rob1->goalReached){
-            done = true;
-            counter--;
-        }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        goal = cell.cartesianPosition;
+        double stepDistance = 1;
+        std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition,rob1, goal, stepDistance);
+        ftr.get();
     }
     std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
     //wait for the user to press any key:
+    simulationThread.join();
     waitKey(0);
-    t2.join();
-
     return 0;
 }

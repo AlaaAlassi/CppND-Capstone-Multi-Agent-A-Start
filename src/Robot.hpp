@@ -9,7 +9,7 @@ struct Robot
     bool goalReached = false;
     std::mutex mtx;
 
-    void trackGoalPosition(Cartesian2DPoint goal, double d)
+    bool trackGoalPosition(Cartesian2DPoint goal, double d)
     {
         setGoal(goal);
         goalReached = false;
@@ -24,6 +24,7 @@ struct Robot
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         goalReached = true;
+        return true;
     }
 
     void step(double dx, double dy)
