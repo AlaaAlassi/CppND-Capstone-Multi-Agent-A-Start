@@ -11,6 +11,7 @@ struct Robot
 
     void trackGoalPosition(Cartesian2DPoint goal, double d)
     {
+        setGoal(goal);
         goalReached = false;
         auto n = std::round(this->distanceToPoint(goal) / d);
         for (int i = 0; i < n; i++)
@@ -47,4 +48,17 @@ struct Robot
         return sqrt(pow(x2 - x1, 2) +
                     pow(y2 - y1, 2));
     }
+
+    Cartesian2DPoint getGoal(){
+        std::lock_guard<std::mutex> lck(mtx);
+        return _goal;
+    };
+
+    void setGoal(Cartesian2DPoint g){
+        std::lock_guard<std::mutex> lck(mtx);
+         _goal = g;
+    };
+
+    private:
+    Cartesian2DPoint _goal = Cartesian2DPoint(position.x,position.y);
 };

@@ -92,9 +92,11 @@ void Graphics::drawTrafficObjects()
     {
         std::unique_lock<std::mutex> uLock(mtx);
         Point rp = Point(robot->position.x,robot->position.y);
+        Point rg = Point(robot->getGoal().x,robot->getGoal().y);
         uLock.unlock();
         cv::Scalar robotColor = Scalar(0, 0, 255);
         cv::circle(_images.at(1), rp, _cellSize*0.5, robotColor, FILLED,LINE_8);
+        cv::circle(_images.at(1), rg, _cellSize*0.5, robotColor, 2,LINE_8);
     }
 
     float opacity = 1;
