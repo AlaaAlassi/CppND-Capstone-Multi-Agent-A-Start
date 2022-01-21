@@ -10,8 +10,7 @@ std::vector<CellData> Warehouse::getDefultMap()
     {
         for (int i = 0; i < xSize; i++)
         {
-            int index = i + xSize * (j);
-            map.emplace_back(j, i, index, cellSize);
+            map.emplace_back(j, i, cellSize);
         }
     }
     for (auto &cell : map)

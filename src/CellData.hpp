@@ -5,8 +5,7 @@
 enum CellValue {emptey,occupied,delivary,pickup};
 struct CellData
 {
-    CellData(unsigned int row, unsigned int col, unsigned int i, double cellSize);
-    unsigned int linearIndex;
+    CellData(unsigned int row, unsigned int col, double cellSize);
     unsigned int rowIndex;
     unsigned int columnsIndex;
     CellValue value = CellValue::emptey;
