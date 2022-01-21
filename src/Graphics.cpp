@@ -6,14 +6,14 @@
 
 using namespace cv;
 
-Graphics::Graphics(int windowLength,int windowWidth,std::vector<CellData> &map){
+Graphics::Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> map){
     Mat im0 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
-    _cellSize = map.at(0).cellSize;
+    _cellSize = map.at(0)->cellSize;
     for (auto const &cell : map)
     {
-        Point p1 = Point(cell.corners->first.x,cell.corners->first.y);
-        Point p2 = Point(cell.corners->second.x,cell.corners->second.y);
-        Point centerOfCell = Point(cell.cartesianPosition.x, cell.cartesianPosition.y);
+        Point p1 = Point(cell->corners->first.x,cell->corners->first.y);
+        Point p2 = Point(cell->corners->second.x,cell->corners->second.y);
+        Point centerOfCell = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
         int shift = 0;
 
         rectangle(im0,
@@ -24,7 +24,7 @@ Graphics::Graphics(int windowLength,int windowWidth,std::vector<CellData> &map){
                   LINE_8,
                   shift);
 
-        if(cell.value == CellValue::occupied){
+        if(cell->value == CellValue::occupied){
         rectangle(im0,
                   p1,
                   p2,
@@ -32,7 +32,7 @@ Graphics::Graphics(int windowLength,int windowWidth,std::vector<CellData> &map){
                   FILLED,
                   LINE_8,
                   shift);
-        }else if(cell.value == CellValue::delivary){
+        }else if(cell->value == CellValue::delivary){
              rectangle(im0,
                   p1,
                   p2,

@@ -10,7 +10,7 @@
 class Graphics
 {
 public:
-    Graphics(int windowLength,int windowWidth,std::vector<CellData> &map);
+    Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> map);
 
     // getters / setters
     void setRobots(std::vector<std::shared_ptr<Robot>> &robot) { _robots = robot; };
