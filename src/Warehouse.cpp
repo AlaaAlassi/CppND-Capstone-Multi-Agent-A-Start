@@ -2,11 +2,7 @@
 
 Warehouse::Warehouse()
 {
-    double cellSize = 35; //meters/cell
-    size_t numberOfColumns = 35;
-    size_t numberOfRows = 21;
-    _map = std::make_shared<Map>(numberOfColumns,numberOfRows,cellSize);
-    for (auto &cell : _map->_cells)
+    for (auto &cell : _map._cells)
     {
         if (cell->rowIndex == 2 || cell->rowIndex == 6 || cell->rowIndex == 10 || cell->rowIndex == 14 || cell->rowIndex == 18)
         {

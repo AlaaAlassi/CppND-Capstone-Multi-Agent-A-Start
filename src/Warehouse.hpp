@@ -31,6 +31,9 @@ private:
 class Warehouse
 {
     public:
+    double cellSize = 35; //meters/cell
+    size_t numberOfColumns = 35;
+    size_t numberOfRows = 21;
     Warehouse();
-    std::shared_ptr<Map> _map;
+    Map _map = Map(numberOfColumns,numberOfRows,cellSize);
 };

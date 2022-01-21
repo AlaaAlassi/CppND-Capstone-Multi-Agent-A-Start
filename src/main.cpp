@@ -21,16 +21,16 @@ int main(int argc, char **argv)
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
-    Graphics A = Graphics(windowLength, windowWidth,  W._map->_cells);
-    auto rob1 = std::make_shared<Robot>(W._map->_cells[0]->cartesianPosition);
-    auto rob2 = std::make_shared<Robot>(W._map->_cells[0]->cartesianPosition);
+    Graphics A = Graphics(windowLength, windowWidth,  W._map._cells);
+    auto rob1 = std::make_shared<Robot>(W._map._cells[0]->cartesianPosition);
+    auto rob2 = std::make_shared<Robot>(W._map._cells[0]->cartesianPosition);
     A._robots.push_back(rob1);
     A._robots.push_back(rob2);
     A.loadBackgroundImg();
     std::thread simulationThread(&Graphics::simulate, &A);
     Cartesian2DPoint goal;
     Cartesian2DPoint goal2;
-    for (auto const &cell : W._map->_cells)
+    for (auto const &cell : W._map._cells)
     {
         goal = cell->cartesianPosition;
         goal2 = cell->cartesianPosition;
@@ -39,6 +39,9 @@ int main(int argc, char **argv)
         std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition,rob2, goal2, 0.5);
         ftr.get();
         ftr2.get();
+        std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
+        std::cout << "Goal2 reached, distance error: " << rob2->distanceToPoint(goal2) << std::endl;
+
     }
     std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
     //wait for the user to press any key:
