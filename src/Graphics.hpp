@@ -19,7 +19,7 @@ public:
     void simulate();
     void loadBackgroundImg();
         // typical behaviour methods
-    void drawTrafficObjects();
+    void drawRobots();
     std::vector<std::shared_ptr<Robot>> _robots;
 
 private:

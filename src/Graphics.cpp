@@ -59,7 +59,7 @@ void Graphics::simulate()
 {
 while (true)
         {
-            drawTrafficObjects();
+            drawRobots();
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 }
@@ -78,7 +78,7 @@ void Graphics::loadBackgroundImg()
 
 }
 
-void Graphics::drawTrafficObjects()
+void Graphics::drawRobots()
 {
     // reset images
     _images.at(1) = _images.at(0).clone();
