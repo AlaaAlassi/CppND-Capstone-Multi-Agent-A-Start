@@ -6,10 +6,10 @@
 
 using namespace cv;
 
-Graphics::Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> map){
+Graphics::Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> mapCells){
     Mat im0 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
-    _cellSize = map.at(0)->cellSize;
-    for (auto const &cell : map)
+    _cellSize = mapCells.at(0)->cellSize;
+    for (auto const &cell : mapCells)
     {
         Point p1 = Point(cell->corners->first.x,cell->corners->first.y);
         Point p2 = Point(cell->corners->second.x,cell->corners->second.y);
