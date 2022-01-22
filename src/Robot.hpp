@@ -9,6 +9,7 @@ class Robot
     Robot(int id,Cartesian2DPoint position,double radius) :_id(id), _position(position),_radius(radius){};
     bool goalReached = false;
     std::mutex mtx;
+    std::vector<std::shared_ptr<CellData>> _path;
 
     bool trackGoalPosition(Cartesian2DPoint goal)
     {

@@ -95,10 +95,17 @@ void Graphics::drawRobots()
         int r = sqrt(255 * 255 - g * g - b * b); // ensure that length of color vector is always 255
         Scalar robotColor = cv::Scalar(b, g, r);
         std::unique_lock<std::mutex> uLock(mtx);
+
+        if (!robot->_path.empty())
+        {
+            for (auto const &cell:(robot->_path))
+            {
+                Point rg = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
+                circle(_images.at(1), rg, robot->getRadius(), robotColor, 2, LINE_8);
+            }
+        }
         Point rp = Point(robot->getPosition().x, robot->getPosition().y);
-        Point rg = Point(robot->getGoal().x, robot->getGoal().y);
         circle(_images.at(1), rp, robot->getRadius(), robotColor, FILLED, LINE_8);
-        circle(_images.at(1), rg, robot->getRadius(), robotColor, 2, LINE_8);
         uLock.unlock();
     }
 

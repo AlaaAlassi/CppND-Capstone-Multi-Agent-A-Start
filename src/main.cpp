@@ -15,17 +15,30 @@ const int MAX_MONITOR_WIDTH = 1920;
 
 int main(int argc, char **argv)
 {
+    // get visulize the warehouse
     Warehouse warehouse = Warehouse();
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
+
+    // construct dummy robots
     auto rob1 = std::make_shared<Robot>(1,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
     auto rob2 = std::make_shared<Robot>(2,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
     viewer._robots.push_back(rob1);
     viewer._robots.push_back(rob2);
     viewer.loadBackgroundImg();
+
+    // run viewer thread
     std::thread simulationThread(&Graphics::run, &viewer);
+
+    //create a path
+
+    int pathSize = 10;
+    for(int j=0;j<pathSize;j++){
+        rob1->_path.push_back(warehouse._map._cells[j]);
+    }
+
     Cartesian2DPoint goal;
     Cartesian2DPoint goal2;
     int counter = 0;
