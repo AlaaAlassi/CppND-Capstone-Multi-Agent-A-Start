@@ -19,13 +19,13 @@ int main(int argc, char **argv)
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
-    Graphics A = Graphics(windowLength, windowWidth, warehouse._map);
+    Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
     auto rob1 = std::make_shared<Robot>(1,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
     auto rob2 = std::make_shared<Robot>(2,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
-    A._robots.push_back(rob1);
-    A._robots.push_back(rob2);
-    A.loadBackgroundImg();
-    std::thread simulationThread(&Graphics::simulate, &A);
+    viewer._robots.push_back(rob1);
+    viewer._robots.push_back(rob2);
+    viewer.loadBackgroundImg();
+    std::thread simulationThread(&Graphics::run, &viewer);
     Cartesian2DPoint goal;
     Cartesian2DPoint goal2;
     int counter = 0;

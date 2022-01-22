@@ -59,7 +59,7 @@ Graphics::Graphics(int windowLength, int windowWidth, Map &map)
     _mapImage = im0;
 }
 
-void Graphics::simulate()
+void Graphics::run()
 {
     while (true)
     {

@@ -16,7 +16,7 @@ public:
     void setRobots(std::vector<std::shared_ptr<Robot>> &robot) { _robots = robot; };
 
     // typical behaviour methods
-    void simulate();
+    void run();
     void loadBackgroundImg();
         // typical behaviour methods
     void drawRobots();
