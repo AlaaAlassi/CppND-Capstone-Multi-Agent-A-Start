@@ -6,10 +6,9 @@
 
 using namespace cv;
 
-Graphics::Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> mapCells){
+Graphics::Graphics(int windowLength,int windowWidth,Map &map){
     Mat im0 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
-    _cellSize = mapCells.at(0)->cellSize;
-    for (auto const &cell : mapCells)
+    for (auto const &cell : map._cells)
     {
         Point p1 = Point(cell->corners->first.x,cell->corners->first.y);
         Point p2 = Point(cell->corners->second.x,cell->corners->second.y);
@@ -83,17 +82,16 @@ void Graphics::drawRobots()
     // reset images
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
-
     // create overlay from all traffic objects
     for (auto &robot : _robots)
     {
-        std::unique_lock<std::mutex> uLock(mtx);
-        Point rp = Point(robot->position.x,robot->position.y);
-        Point rg = Point(robot->getGoal().x,robot->getGoal().y);
-        uLock.unlock();
         cv::Scalar robotColor = Scalar( 166,116 ,40);//B,G,R
-        cv::circle(_images.at(1), rp, _cellSize*0.5, robotColor, FILLED,LINE_8);
-        cv::circle(_images.at(1), rg, _cellSize*0.5, robotColor, 2,LINE_8);
+        std::unique_lock<std::mutex> uLock(mtx);
+        Point rp = Point(robot->getPosition().x,robot->getPosition().y);
+        Point rg = Point(robot->getGoal().x,robot->getGoal().y);
+        cv::circle(_images.at(1), rp, robot->getRadius(), robotColor, FILLED,LINE_8);
+        cv::circle(_images.at(1), rg, robot->getRadius(), robotColor, 2,LINE_8);
+        uLock.unlock();
     }
 
     float opacity = 1;

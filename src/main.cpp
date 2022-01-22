@@ -20,8 +20,8 @@ int main(int argc, char **argv)
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
     Graphics A = Graphics(windowLength, windowWidth, warehouse._map);
-    auto rob1 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
-    auto rob2 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
+    auto rob1 = std::make_shared<Robot>(1,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
+    auto rob2 = std::make_shared<Robot>(2,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
     A._robots.push_back(rob1);
     A._robots.push_back(rob2);
     A.loadBackgroundImg();

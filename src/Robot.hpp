@@ -4,8 +4,8 @@
 
 struct Robot
 {
-    Robot(Cartesian2DPoint position) : position(position){};
-    Cartesian2DPoint position;
+    Robot(int id,Cartesian2DPoint position) : _id(id), _position(position){};
+    Robot(int id,Cartesian2DPoint position,double radius) :_id(id), _position(position),_radius(radius){};
     bool goalReached = false;
     std::mutex mtx;
 
@@ -16,8 +16,8 @@ struct Robot
         auto n = std::round(this->distanceToPoint(goal) / d);
         for (int i = 0; i < n; i++)
         {
-            double cos_heading = (goal.y - position.y) / distanceToPoint(goal);
-            double sin_heading = (goal.x - position.x) / distanceToPoint(goal);
+            double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
+            double sin_heading = (goal.x - _position.x) / distanceToPoint(goal);
             double dy = cos_heading * d;
             double dx = sin_heading * d;
             step(dx, dy);
@@ -30,8 +30,8 @@ struct Robot
     void step(double dx, double dy)
     {
         std::lock_guard<std::mutex> lck(mtx);
-        position.x = position.x + dx;
-        position.y = position.y + dy;
+        _position.x = _position.x + dx;
+        _position.y = _position.y + dy;
     }
 
     template <typename T>
@@ -42,8 +42,8 @@ struct Robot
 
     double distanceToPoint(Cartesian2DPoint point)
     {
-        double x1 = position.x;
-        double y1 = position.y;
+        double x1 = _position.x;
+        double y1 = _position.y;
         double x2 = point.x;
         double y2 = point.y;
         return sqrt(pow(x2 - x1, 2) +
@@ -51,15 +51,24 @@ struct Robot
     }
 
     Cartesian2DPoint getGoal(){
-        std::lock_guard<std::mutex> lck(mtx);
         return _goal;
     };
 
+    double getRadius(){
+        return _radius;
+    };
+
     void setGoal(Cartesian2DPoint g){
-        std::lock_guard<std::mutex> lck(mtx);
          _goal = g;
     };
 
+    Cartesian2DPoint getPosition(){
+        return _position;
+    };
+
     private:
-    Cartesian2DPoint _goal = Cartesian2DPoint(position.x,position.y);
+    Cartesian2DPoint _position;
+    int _id = 0;
+    Cartesian2DPoint _goal = Cartesian2DPoint(_position.x,_position.y);
+    double _radius = 10;
 };
