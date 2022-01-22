@@ -2,7 +2,7 @@
 #include "CellData.hpp"
 
 CellData::CellData(unsigned int row, unsigned int col, double cellSize)
-    : rowIndex(row), columnsIndex(col), cellSize(cellSize)
+    : rowIndex(row), columnsIndex(col)
 {
     cartesianPosition.y = rowIndex * cellSize +  cellSize * 0.5;
     cartesianPosition.x = columnsIndex * cellSize + cellSize * 0.5;

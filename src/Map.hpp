@@ -1,11 +1,12 @@
 #pragma once
 #include "CellData.hpp"
+#include <iostream>
 #include <vector>
 
 class Map
 {
     public:
-    Map(std::size_t sizeCol, std::size_t sizeRow, double cellSize) : _sizeCol(sizeCol), _sizeRow(sizeRow)
+    Map(std::size_t sizeCol, std::size_t sizeRow, double cellSize) : _sizeCol(sizeCol), _sizeRow(sizeRow),_cellSize(cellSize)
     {
         for (int j = 0; j < sizeRow ; j++)
         {
@@ -27,9 +28,11 @@ class Map
 
     std::size_t getNumberOfColumns(){return _sizeCol;};
     std::size_t getNumberOfRows(){return _sizeRow;};
+    double getCellSize(){return _cellSize;};
 
     std::vector<std::shared_ptr<CellData>> _cells;
 private:
     std::size_t _sizeCol;
     std::size_t _sizeRow;
+    double _cellSize;
 };

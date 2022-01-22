@@ -9,7 +9,6 @@ struct CellData
     unsigned int rowIndex;
     unsigned int columnsIndex;
     CellValue value = CellValue::emptey;
-    double cellSize;
     Cartesian2DPoint cartesianPosition;
     std::unique_ptr<std::pair<Cartesian2DPoint,Cartesian2DPoint>> corners;
 };

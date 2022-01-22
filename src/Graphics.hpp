@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 #include <opencv2/core.hpp>
-#include "CellData.hpp"
+#include "Map.hpp"
 #include "Robot.hpp"
 
 class Graphics
 {
 public:
-    Graphics(int windowLength,int windowWidth,std::vector<std::shared_ptr<CellData>> map);
+    Graphics(int windowLength,int windowWidth,Map &map);
 
     // getters / setters
     void setRobots(std::vector<std::shared_ptr<Robot>> &robot) { _robots = robot; };

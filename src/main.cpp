@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
-    Graphics A = Graphics(windowLength, windowWidth, warehouse._map._cells);
+    Graphics A = Graphics(windowLength, windowWidth, warehouse._map);
     auto rob1 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
     auto rob2 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
     A._robots.push_back(rob1);
@@ -35,8 +35,6 @@ int main(int argc, char **argv)
         forward = !forward;
         for (int j = 0; j < warehouse._map.getNumberOfColumns(); j++)
         {
-            std::cout << "i " << i << std::endl;
-            std::cout << "j " << counter << std::endl;
             goal = warehouse._map.getCell(i, counter)->cartesianPosition;
             goal2 = warehouse._map.getCell(i, counter)->cartesianPosition;
             double stepDistance = 1;
@@ -44,8 +42,6 @@ int main(int argc, char **argv)
             std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition, rob2, goal2, 0.5);
             ftr.get();
             ftr2.get();
-            std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
-            std::cout << "Goal2 reached, distance error: " << rob2->distanceToPoint(goal2) << std::endl;
             if (forward && j!=(warehouse._map.getNumberOfColumns()-1))
             {
                 counter=j+1;
