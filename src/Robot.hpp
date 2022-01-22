@@ -2,8 +2,9 @@
 #include "Cartesian2DPoint.hpp"
 #include <thread>
 
-struct Robot
+class Robot
 {
+    public :
     Robot(int id,Cartesian2DPoint position) : _id(id), _position(position){};
     Robot(int id,Cartesian2DPoint position,double radius) :_id(id), _position(position),_radius(radius){};
     bool goalReached = false;
