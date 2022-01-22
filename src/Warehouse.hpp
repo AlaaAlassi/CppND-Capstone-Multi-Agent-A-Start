@@ -1,6 +1,11 @@
-#include "CellData.hpp"
+#include "Map.hpp"
 #include <vector>
-
-namespace Warehouse {
-std::vector<CellData> getDefultMap();
-}
+class Warehouse
+{
+    public:
+    Warehouse();
+    double cellSize = 35; //meters/cell
+    size_t numberOfColumns = 35;
+    size_t numberOfRows = 21;
+    Map _map = Map(numberOfColumns,numberOfRows,cellSize);
+};
