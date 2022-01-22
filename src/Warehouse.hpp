@@ -23,6 +23,10 @@ class Map
         auto cell = getCell(i, j);
         cell->value = value;
     };
+
+    std::size_t getNumberOfColumns(){return _sizeCol;};
+    std::size_t getNumberOfRows(){return _sizeRow;};
+
     std::vector<std::shared_ptr<CellData>> _cells;
 private:
     std::size_t _sizeCol;

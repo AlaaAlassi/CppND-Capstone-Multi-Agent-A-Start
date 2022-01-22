@@ -8,7 +8,6 @@
 #include <thread>
 #include <future>
 
-
 using namespace cv;
 
 const int MAX_MONITOR_LENGTH = 1080;
@@ -16,32 +15,46 @@ const int MAX_MONITOR_WIDTH = 1920;
 
 int main(int argc, char **argv)
 {
-    //construct a grid
-     Warehouse W = Warehouse();
+    Warehouse warehouse = Warehouse();
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
-    Graphics A = Graphics(windowLength, windowWidth,  W._map._cells);
-    auto rob1 = std::make_shared<Robot>(W._map._cells[0]->cartesianPosition);
-    auto rob2 = std::make_shared<Robot>(W._map._cells[0]->cartesianPosition);
+    Graphics A = Graphics(windowLength, windowWidth, warehouse._map._cells);
+    auto rob1 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
+    auto rob2 = std::make_shared<Robot>(warehouse._map._cells[0]->cartesianPosition);
     A._robots.push_back(rob1);
     A._robots.push_back(rob2);
     A.loadBackgroundImg();
     std::thread simulationThread(&Graphics::simulate, &A);
     Cartesian2DPoint goal;
     Cartesian2DPoint goal2;
-    for (auto const &cell : W._map._cells)
+    int counter = 0;
+    bool forward = false;
+    for (int i = 0; i < warehouse._map.getNumberOfRows();i++)
     {
-        goal = cell->cartesianPosition;
-        goal2 = cell->cartesianPosition;
-        double stepDistance = 1;
-        std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition,rob1, goal, stepDistance);
-        std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition,rob2, goal2, 0.5);
-        ftr.get();
-        ftr2.get();
-        std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
-        std::cout << "Goal2 reached, distance error: " << rob2->distanceToPoint(goal2) << std::endl;
-
+        forward = !forward;
+        for (int j = 0; j < warehouse._map.getNumberOfColumns(); j++)
+        {
+            std::cout << "i " << i << std::endl;
+            std::cout << "j " << counter << std::endl;
+            goal = warehouse._map.getCell(i, counter)->cartesianPosition;
+            goal2 = warehouse._map.getCell(i, counter)->cartesianPosition;
+            double stepDistance = 1;
+            std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, rob1, goal, stepDistance);
+            std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition, rob2, goal2, 0.5);
+            ftr.get();
+            ftr2.get();
+            std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
+            std::cout << "Goal2 reached, distance error: " << rob2->distanceToPoint(goal2) << std::endl;
+            if (forward && j!=(warehouse._map.getNumberOfColumns()-1))
+            {
+                counter=j+1;
+            }
+            else if(!forward && j!=(warehouse._map.getNumberOfColumns()-1))
+            {
+                counter = warehouse._map.getNumberOfColumns()-1-j;
+            }
+        }
     }
     std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
     //wait for the user to press any key:
