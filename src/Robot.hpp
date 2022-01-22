@@ -10,17 +10,18 @@ class Robot
     bool goalReached = false;
     std::mutex mtx;
 
-    bool trackGoalPosition(Cartesian2DPoint goal, double d)
+    bool trackGoalPosition(Cartesian2DPoint goal)
     {
+        double stepingDistance = 1;
         setGoal(goal);
         goalReached = false;
-        auto n = std::round(this->distanceToPoint(goal) / d);
+        auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
         for (int i = 0; i < n; i++)
         {
             double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
             double sin_heading = (goal.x - _position.x) / distanceToPoint(goal);
-            double dy = cos_heading * d;
-            double dx = sin_heading * d;
+            double dy = cos_heading * stepingDistance;
+            double dx = sin_heading * stepingDistance;
             step(dx, dy);
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }

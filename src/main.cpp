@@ -37,9 +37,8 @@ int main(int argc, char **argv)
         {
             goal = warehouse._map.getCell(i, counter)->cartesianPosition;
             goal2 = warehouse._map.getCell(i, counter)->cartesianPosition;
-            double stepDistance = 1;
-            std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, rob1, goal, stepDistance);
-            std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition, rob2, goal2, 0.5);
+            std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, rob1, goal);
+            std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition, rob2, goal2);
             ftr.get();
             ftr2.get();
             if (forward && j!=(warehouse._map.getNumberOfColumns()-1))
