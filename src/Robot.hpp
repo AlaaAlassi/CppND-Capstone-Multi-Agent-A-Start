@@ -66,6 +66,10 @@ struct Robot
         return _position;
     };
 
+    int getID(){
+        return _id;
+    }
+
     private:
     Cartesian2DPoint _position;
     int _id = 0;
