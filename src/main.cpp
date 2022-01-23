@@ -23,48 +23,51 @@ int main(int argc, char **argv)
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
 
     // construct dummy robots
-    auto rob1 = std::make_shared<Robot>(1,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
-    auto rob2 = std::make_shared<Robot>(2,warehouse._map._cells[0]->cartesianPosition,warehouse._map.getCellSize()*0.5);
-    viewer._robots.push_back(rob1);
-    viewer._robots.push_back(rob2);
+    auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
+    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
+    std::vector<std::shared_ptr<Robot>> busyRobots;
+    busyRobots.push_back(rob1);
+    busyRobots.push_back(rob2);
+    viewer.setRobots(busyRobots);
     viewer.loadBackgroundImg();
 
     // run viewer thread
     std::thread simulationThread(&Graphics::run, &viewer);
 
     //create a path
-
-    int pathSize = 10;
-    for(int j=0;j<pathSize;j++){
+    std::mutex mtx;
+    for (int j = 0; j < 20; j++)
+    {
+        std::lock_guard lg(mtx);
         rob1->_path.push_back(warehouse._map._cells[j]);
+    }
+        for (int j = 0; j < 5; j++)
+    {
+        std::lock_guard lg(mtx);
+        rob2->_path.push_back(warehouse._map.getCell(j,1));
     }
 
     Cartesian2DPoint goal;
     Cartesian2DPoint goal2;
     int counter = 0;
     bool forward = false;
-    for (int i = 0; i < warehouse._map.getNumberOfRows();i++)
+    while (!busyRobots.empty())
     {
-        forward = !forward;
-        for (int j = 0; j < warehouse._map.getNumberOfColumns(); j++)
+        for (std::size_t i=0;i < busyRobots.size();i++)
         {
-            goal = warehouse._map.getCell(i, counter)->cartesianPosition;
-            goal2 = warehouse._map.getCell(i, counter)->cartesianPosition;
-            std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, rob1, goal);
-            std::future<bool> ftr2 = std::async(std::launch::async, &Robot::trackGoalPosition, rob2, goal2);
-            ftr.get();
-            ftr2.get();
-            if (forward && j!=(warehouse._map.getNumberOfColumns()-1))
+            if (!busyRobots[i]->_path.empty())
             {
-                counter=j+1;
-            }
-            else if(!forward && j!=(warehouse._map.getNumberOfColumns()-1))
-            {
-                counter = warehouse._map.getNumberOfColumns()-1-j;
+                std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, busyRobots[i], busyRobots[i]->_path.front()->cartesianPosition);
+                ftr.get();
+                std::lock_guard lg(mtx);
+                busyRobots[i]->_path.erase(busyRobots[i]->_path.begin());
+            }else{
+                std::cout << "robot #" <<  busyRobots[i]->getID() << " is done" <<std::endl;
+                busyRobots.erase(busyRobots.begin()+i);
             }
         }
     }
-    std::cout << "Goal reached, distance error: " << rob1->distanceToPoint(goal) << std::endl;
+    std::cout << "exit" <<std::endl;
     //wait for the user to press any key:
     simulationThread.join();
     waitKey(0);

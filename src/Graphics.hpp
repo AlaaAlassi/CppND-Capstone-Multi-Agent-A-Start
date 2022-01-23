@@ -13,7 +13,7 @@ public:
     Graphics(int windowLength,int windowWidth,Map &map);
 
     // getters / setters
-    void setRobots(std::vector<std::shared_ptr<Robot>> &robot) { _robots = robot; };
+    void setRobots(std::vector<std::shared_ptr<Robot>> robot) { _robots = robot; };
 
     // typical behaviour methods
     void run();

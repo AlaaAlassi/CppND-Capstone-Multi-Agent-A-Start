@@ -87,6 +87,7 @@ void Graphics::drawRobots()
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
     // create overlay from all traffic objects
+    std::unique_lock<std::mutex> uLock(mtx);
     for (auto &robot : _robots)
     {
         RNG rng(robot->getID());
@@ -94,7 +95,6 @@ void Graphics::drawRobots()
         int g = rng.uniform(0, 255);
         int r = sqrt(255 * 255 - g * g - b * b); // ensure that length of color vector is always 255
         Scalar robotColor = cv::Scalar(b, g, r);
-        std::unique_lock<std::mutex> uLock(mtx);
 
         if (!robot->_path.empty())
         {
@@ -106,8 +106,8 @@ void Graphics::drawRobots()
         }
         Point rp = Point(robot->getPosition().x, robot->getPosition().y);
         circle(_images.at(1), rp, robot->getRadius(), robotColor, FILLED, LINE_8);
-        uLock.unlock();
     }
+    uLock.unlock();
 
     float opacity = 1;
     cv::addWeighted(_images.at(1), opacity, _images.at(0), 1.0 - opacity, 0, _images.at(2));
