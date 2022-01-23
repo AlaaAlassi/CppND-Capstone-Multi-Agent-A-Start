@@ -11,8 +11,10 @@ class Robot
     std::mutex mtx;
     std::vector<std::shared_ptr<CellData>> _path;
 
-    bool trackGoalPosition(Cartesian2DPoint goal)
+    bool trackNextPathPoint()
     {
+        if(!_path.empty()){
+        auto goal = _path.front()->cartesianPosition;
         double stepingDistance = 0.3;
         setGoal(goal);
         goalReached = false;
@@ -27,9 +29,8 @@ class Robot
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         goalReached = true;
-        if(!_path.empty()){
-             std::lock_guard<std::mutex> lck(mtx);
-            _path.erase(_path.begin());
+        std::lock_guard<std::mutex> lck(mtx);
+        _path.erase(_path.begin());
         }
         return true;
     }

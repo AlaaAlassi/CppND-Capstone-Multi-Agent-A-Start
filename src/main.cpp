@@ -54,9 +54,10 @@ int main(int argc, char **argv)
         {
             if (!busyRobots[i]->_path.empty())
             {
-                ftrs.emplace_back(std::async(std::launch::async, &Robot::trackGoalPosition, busyRobots[i], busyRobots[i]->_path.front()->cartesianPosition));
+                ftrs.emplace_back(std::async(std::launch::async, &Robot::trackNextPathPoint, busyRobots[i]));
             }else{
                 std::cout << "robot #" <<  busyRobots[i]->getID() << " is done" <<std::endl;
+                std::lock_guard lg(mtx);
                 busyRobots.erase(busyRobots.begin()+i);
             }
         }

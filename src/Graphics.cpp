@@ -87,9 +87,9 @@ void Graphics::drawRobots()
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
     // create overlay from all traffic objects
+    std::lock_guard<std::mutex> lg(mtx);
     for (auto &robot : _robots)
     {
-        std::lock_guard<std::mutex> lg(mtx);
         RNG rng(robot->getID());
         int b = rng.uniform(0, 255);
         int g = rng.uniform(0, 255);
