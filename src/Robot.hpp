@@ -13,7 +13,7 @@ class Robot
 
     bool trackGoalPosition(Cartesian2DPoint goal)
     {
-        double stepingDistance = 1;
+        double stepingDistance = 0.3;
         setGoal(goal);
         goalReached = false;
         auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
@@ -27,12 +27,15 @@ class Robot
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         goalReached = true;
+        if(!_path.empty()){
+             std::lock_guard<std::mutex> lck(mtx);
+            _path.erase(_path.begin());
+        }
         return true;
     }
 
     void step(double dx, double dy)
     {
-        std::lock_guard<std::mutex> lck(mtx);
         _position.x = _position.x + dx;
         _position.y = _position.y + dy;
     }
@@ -66,13 +69,22 @@ class Robot
     };
 
     Cartesian2DPoint getPosition(){
+        std::lock_guard<std::mutex> lck(mtx);
         return _position;
     };
 
     int getID(){
+        std::lock_guard<std::mutex> lck(mtx);
         return _id;
     }
 
+     std::vector<Cartesian2DPoint> getPath(){
+         std::vector<Cartesian2DPoint> pathPoints;
+         for(const auto & cell:_path){
+             pathPoints.emplace_back(cell->cartesianPosition);
+         }
+         return pathPoints;
+     };
     private:
     Cartesian2DPoint _position;
     int _id = 0;

@@ -47,25 +47,22 @@ int main(int argc, char **argv)
         rob2->_path.push_back(warehouse._map.getCell(j,1));
     }
 
-    Cartesian2DPoint goal;
-    Cartesian2DPoint goal2;
-    int counter = 0;
-    bool forward = false;
     while (!busyRobots.empty())
     {
+        std::vector<std::future<bool>> ftrs;
         for (std::size_t i=0;i < busyRobots.size();i++)
         {
             if (!busyRobots[i]->_path.empty())
             {
-                std::future<bool> ftr = std::async(std::launch::async, &Robot::trackGoalPosition, busyRobots[i], busyRobots[i]->_path.front()->cartesianPosition);
-                ftr.get();
-                std::lock_guard lg(mtx);
-                busyRobots[i]->_path.erase(busyRobots[i]->_path.begin());
+                ftrs.emplace_back(std::async(std::launch::async, &Robot::trackGoalPosition, busyRobots[i], busyRobots[i]->_path.front()->cartesianPosition));
             }else{
                 std::cout << "robot #" <<  busyRobots[i]->getID() << " is done" <<std::endl;
                 busyRobots.erase(busyRobots.begin()+i);
             }
         }
+            for(auto &ftr:ftrs){
+               ftr.wait();
+            }
     }
     std::cout << "exit" <<std::endl;
     //wait for the user to press any key:
