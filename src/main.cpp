@@ -39,12 +39,12 @@ int main(int argc, char **argv)
     for (int j = 0; j < 20; j++)
     {
         std::lock_guard lg(mtx);
-        rob1->_path.push_back(warehouse._map._cells[j]);
+        rob1->appendCellToPath(warehouse._map._cells[j]);
     }
         for (int j = 0; j < 5; j++)
     {
         std::lock_guard lg(mtx);
-        rob2->_path.push_back(warehouse._map.getCell(j,1));
+        rob2->appendCellToPath(warehouse._map.getCell(j,1));
     }
 
     while (!busyRobots.empty())
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         std::vector<std::future<bool>> ftrs;
         for (std::size_t i=0;i < busyRobots.size();i++)
         {
-            if (!busyRobots[i]->_path.empty())
+            if (busyRobots[i]->isBusy())
             {
                 ftrs.emplace_back(std::async(std::launch::async, &Robot::trackNextPathPoint, busyRobots[i]));
             }else{

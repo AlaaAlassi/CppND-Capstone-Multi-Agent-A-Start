@@ -96,7 +96,7 @@ void Graphics::drawRobots()
         int r = sqrt(255 * 255 - g * g - b * b); // ensure that length of color vector is always 255
         Scalar robotColor = cv::Scalar(b, g, r);
 
-        if (!robot->_path.empty())
+        if (!robot->getPath().empty())
         {
             for (auto const &cell:(robot->getPath()))
             {
