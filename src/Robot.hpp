@@ -1,5 +1,6 @@
 #pragma once
 #include "Cartesian2DPoint.hpp"
+#include <deque>
 #include <thread>
 
 class Robot
@@ -14,7 +15,7 @@ public:
     {
         if (isBusy())
         {
-            auto goal = _path.front()->cartesianPosition;
+            auto goal = _path.back()->cartesianPosition;
             double stepingDistance = 0.3;
             setGoal(goal);
             goalReached = false;
@@ -30,7 +31,7 @@ public:
             }
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
-            _path.erase(_path.begin());
+            _path.pop_back();
         }
         return true;
     }
@@ -39,12 +40,6 @@ public:
     {
         _position.x = _position.x + dx;
         _position.y = _position.y + dy;
-    }
-
-    template <typename T>
-    int sgn(T val)
-    {
-        return (T(0) < val) - (val < T(0));
     }
 
     double distanceToPoint(Cartesian2DPoint point)
@@ -74,7 +69,7 @@ public:
 
     void appendCellToPath(std::shared_ptr<CellData> cell)
     {
-        _path.push_back(cell);
+        _path.push_front(cell);
     }
 
     Cartesian2DPoint getPosition()
@@ -114,5 +109,5 @@ private:
     int _id = 0;
     Cartesian2DPoint _goal = Cartesian2DPoint(_position.x, _position.y);
     double _radius = 10;
-    std::vector<std::shared_ptr<CellData>> _path;
+    std::deque <std::shared_ptr<CellData>> _path;
 };
