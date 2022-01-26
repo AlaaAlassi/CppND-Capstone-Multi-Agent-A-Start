@@ -84,14 +84,9 @@ public:
         return _id;
     }
 
-    std::vector<Cartesian2DPoint> getPath()
+    std::deque <std::shared_ptr<CellData>> getPath()
     {
-        std::vector<Cartesian2DPoint> pathPoints;
-        for (const auto &cell : _path)
-        {
-            pathPoints.emplace_back(cell->cartesianPosition);
-        }
-        return pathPoints;
+        return _path;
     };
 
     bool isNotBusy()

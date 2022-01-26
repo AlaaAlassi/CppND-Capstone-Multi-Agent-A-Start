@@ -20,6 +20,7 @@ public:
     void loadBackgroundImg();
         // typical behaviour methods
     void drawRobots();
+    void drawCell(std::shared_ptr<CellData> cell, cv::Mat & image);
     std::vector<std::shared_ptr<Robot>> _robots;
 
 private:
@@ -28,6 +29,8 @@ private:
     std::vector<cv::Mat> _images;
     cv::Mat _mapImage;
     std::mutex mtx;
+    int _windowLength;
+    int _windowWidth;
 };
 
 #endif
