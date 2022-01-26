@@ -16,7 +16,7 @@ public:
         if (isBusy())
         {
             auto goal = _path.back()->cartesianPosition;
-            double stepingDistance = 0.3;
+            double stepingDistance = 0.5;
             setGoal(goal);
             goalReached = false;
             auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
