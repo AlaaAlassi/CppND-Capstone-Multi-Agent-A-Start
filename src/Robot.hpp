@@ -1,45 +1,45 @@
 #pragma once
 #include "Cartesian2DPoint.hpp"
+#include <deque>
 #include <thread>
 
 class Robot
 {
-    public :
-    Robot(int id,Cartesian2DPoint position) : _id(id), _position(position){};
-    Robot(int id,Cartesian2DPoint position,double radius) :_id(id), _position(position),_radius(radius){};
+public:
+    Robot(int id, Cartesian2DPoint position) : _id(id), _position(position){};
+    Robot(int id, Cartesian2DPoint position, double radius) : _id(id), _position(position), _radius(radius){};
     bool goalReached = false;
     std::mutex mtx;
 
-    bool trackGoalPosition(Cartesian2DPoint goal)
+    bool trackNextPathPoint()
     {
-        double stepingDistance = 1;
-        setGoal(goal);
-        goalReached = false;
-        auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
-        for (int i = 0; i < n; i++)
+        if (isBusy())
         {
-            double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
-            double sin_heading = (goal.x - _position.x) / distanceToPoint(goal);
-            double dy = cos_heading * stepingDistance;
-            double dx = sin_heading * stepingDistance;
-            step(dx, dy);
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            auto goal = _path.back()->cartesianPosition;
+            double stepingDistance = 0.5;
+            setGoal(goal);
+            goalReached = false;
+            auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
+            for (int i = 0; i < n; i++)
+            {
+                double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
+                double sin_heading = (goal.x - _position.x) / distanceToPoint(goal);
+                double dy = cos_heading * stepingDistance;
+                double dx = sin_heading * stepingDistance;
+                step(dx, dy);
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+            goalReached = true;
+            std::lock_guard<std::mutex> lck(mtx);
+            _path.pop_back();
         }
-        goalReached = true;
         return true;
     }
 
     void step(double dx, double dy)
     {
-        std::lock_guard<std::mutex> lck(mtx);
         _position.x = _position.x + dx;
         _position.y = _position.y + dy;
-    }
-
-    template <typename T>
-    int sgn(T val)
-    {
-        return (T(0) < val) - (val < T(0));
     }
 
     double distanceToPoint(Cartesian2DPoint point)
@@ -52,29 +52,57 @@ class Robot
                     pow(y2 - y1, 2));
     }
 
-    Cartesian2DPoint getGoal(){
+    Cartesian2DPoint getGoal()
+    {
         return _goal;
     };
 
-    double getRadius(){
+    double getRadius()
+    {
         return _radius;
     };
 
-    void setGoal(Cartesian2DPoint g){
-         _goal = g;
+    void setGoal(Cartesian2DPoint g)
+    {
+        _goal = g;
     };
 
-    Cartesian2DPoint getPosition(){
+    void appendCellToPath(std::shared_ptr<CellData> cell)
+    {
+        _path.push_front(cell);
+    }
+
+    Cartesian2DPoint getPosition()
+    {
+        std::lock_guard<std::mutex> lck(mtx);
         return _position;
     };
 
-    int getID(){
+    int getID()
+    {
+        std::lock_guard<std::mutex> lck(mtx);
         return _id;
     }
 
-    private:
+    std::deque <std::shared_ptr<CellData>> getPath()
+    {
+        return _path;
+    };
+
+    bool isNotBusy()
+    {
+        return _path.empty();
+    }
+
+    bool isBusy()
+    {
+        return !_path.empty();
+    }
+
+private:
     Cartesian2DPoint _position;
     int _id = 0;
-    Cartesian2DPoint _goal = Cartesian2DPoint(_position.x,_position.y);
+    Cartesian2DPoint _goal = Cartesian2DPoint(_position.x, _position.y);
     double _radius = 10;
+    std::deque <std::shared_ptr<CellData>> _path;
 };

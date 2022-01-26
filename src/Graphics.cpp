@@ -6,57 +6,13 @@
 
 using namespace cv;
 
-Graphics::Graphics(int windowLength, int windowWidth, Map &map)
+Graphics::Graphics(int windowLength, int windowWidth, Map &map):_windowLength(windowLength),_windowWidth(windowWidth)
 {
-    Mat im0 = Mat::zeros(windowLength, windowWidth, CV_8UC3);
+    _mapImage = Mat::zeros(_windowLength, _windowWidth, CV_8UC3);
     for (auto const &cell : map._cells)
     {
-        Point p1 = Point(cell->corners->first.x, cell->corners->first.y);
-        Point p2 = Point(cell->corners->second.x, cell->corners->second.y);
-        Point centerOfCell = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
-        int shift = 0;
-
-        rectangle(im0,
-                  p1,
-                  p2,
-                  Scalar(200, 200, 200),
-                  FILLED,
-                  LINE_8,
-                  shift);
-
-        if (cell->value == CellValue::occupied)
-        {
-            rectangle(im0,
-                      p1,
-                      p2,
-                      Scalar(0, 0, 0),
-                      FILLED,
-                      LINE_8,
-                      shift);
-        }
-        else if (cell->value == CellValue::delivary)
-        {
-            rectangle(im0,
-                      p1,
-                      p2,
-                      Scalar(100, 100, 100),
-                      FILLED,
-                      LINE_8,
-                      shift);
-        }
-        else
-        {
-        }
-        int thickness = 1;
-        rectangle(im0,
-                  p1,
-                  p2,
-                  Scalar(208, 126, 229),
-                  thickness,
-                  LINE_8,
-                  shift);
+        drawCell(cell,_mapImage);
     }
-    _mapImage = im0;
 }
 
 void Graphics::run()
@@ -87,6 +43,7 @@ void Graphics::drawRobots()
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
     // create overlay from all traffic objects
+    std::lock_guard<std::mutex> lg(mtx);
     for (auto &robot : _robots)
     {
         RNG rng(robot->getID());
@@ -94,12 +51,17 @@ void Graphics::drawRobots()
         int g = rng.uniform(0, 255);
         int r = sqrt(255 * 255 - g * g - b * b); // ensure that length of color vector is always 255
         Scalar robotColor = cv::Scalar(b, g, r);
-        std::unique_lock<std::mutex> uLock(mtx);
+
+        if (robot->isBusy())
+        {
+            for (auto const &cell : (robot->getPath()))
+            {
+                Point rg = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
+                circle(_images.at(1), rg, robot->getRadius(), robotColor, 2, LINE_8);
+            }
+        }
         Point rp = Point(robot->getPosition().x, robot->getPosition().y);
-        Point rg = Point(robot->getGoal().x, robot->getGoal().y);
         circle(_images.at(1), rp, robot->getRadius(), robotColor, FILLED, LINE_8);
-        circle(_images.at(1), rg, robot->getRadius(), robotColor, 2, LINE_8);
-        uLock.unlock();
     }
 
     float opacity = 1;
@@ -108,4 +70,51 @@ void Graphics::drawRobots()
     // display background and overlay image
     cv::imshow(_windowName, _images.at(2));
     cv::waitKey(10);
+}
+
+void Graphics::drawCell(std::shared_ptr<CellData> cell, cv::Mat &image)
+{
+    //Mat im0 = Mat::zeros(_windowLength, _windowWidth, CV_8UC3);
+    Point p1 = Point(cell->corners->first.x, cell->corners->first.y);
+    Point p2 = Point(cell->corners->second.x, cell->corners->second.y);
+    Point centerOfCell = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
+    int shift = 0;
+
+    rectangle(image,
+              p1,
+              p2,
+              Scalar(200, 200, 200),
+              FILLED,
+              LINE_8,
+              shift);
+
+    if (cell->value == CellValue::occupied)
+    {
+        rectangle(_mapImage,
+                  p1,
+                  p2,
+                  Scalar(0, 0, 0),
+                  FILLED,
+                  LINE_8,
+                  shift);
+    }
+    else if (cell->value == CellValue::delivary)
+    {
+        rectangle(image,
+                  p1,
+                  p2,
+                  Scalar(100, 100, 100),
+                  FILLED,
+                  LINE_8,
+                  shift);
+    }
+
+    int thickness = 1;
+    rectangle(image,
+              p1,
+              p2,
+              Scalar(208, 126, 229),
+              thickness,
+              LINE_8,
+              shift);
 }
