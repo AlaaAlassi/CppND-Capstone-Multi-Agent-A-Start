@@ -40,7 +40,8 @@ public:
                     robot->appendCellToPath(cell);
                     cell->reserveCell(timeStamp);
                 }
-                else{
+                else
+                {
                     auto nCell = mapHandler->getNeighbours(cell)[2];
                     robot->appendCellToPath(nCell);
                     cell->reserveCell(timeStamp);
@@ -51,8 +52,25 @@ public:
         }
     };
 
+    void addNeighbors( shared_ptr<CellData> currentCell)
+    {
+        auto neighbors = mapHandler->getNeighbours(currentCell);
+        for (auto neighbor : neighbors)
+        {
+            neighbor->Hvalue = CalculateHValue(neighbor);
+            neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
+            _openList.push_back(neighbor);
+            neighbor->visited = true;
+        }
+    }
+
+    double CalculateHValue(shared_ptr<CellData> cell){
+        return cell->distanceTo(_task.first);
+    }
+
 private:
     pair<shared_ptr<CellData>, shared_ptr<CellData>> _task;
     std::mutex mtx;
     Map *mapHandler;
+    vector<shared_ptr<CellData>> _openList;
 };
