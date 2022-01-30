@@ -40,6 +40,11 @@ public:
                     robot->appendCellToPath(cell);
                     cell->reserveCell(timeStamp);
                 }
+                else{
+                    auto nCell = mapHandler->getNeighbours(cell)[2];
+                    robot->appendCellToPath(nCell);
+                    cell->reserveCell(timeStamp);
+                }
                 cell->clearPassedTimeStampsSince(t0);
                 timeStamp = timeStamp + 1;
             }

@@ -31,14 +31,15 @@ public:
     std::size_t getNumberOfColumns() { return _sizeCol; };
     std::size_t getNumberOfRows() { return _sizeRow; };
     double getCellSize() { return _cellSize; };
-    bool cellIsValid(std::shared_ptr<CellData> cell)
+    bool cellIsValid(int i,int j)
     {
         bool isValid = true;
-        if (cell->indexCoordinates.first > getNumberOfRows() ||
-            cell->indexCoordinates.second > getNumberOfColumns())
+        if (i >= getNumberOfRows() ||
+            j >= getNumberOfColumns())
         {
-            return false;
+            isValid = false;
         }
+        return isValid;
     }
 
     std::vector <std::shared_ptr<CellData>> getNeighbours(std::shared_ptr<CellData> cell)
@@ -47,7 +48,7 @@ public:
         for(auto &it:searchWindow){
             int i = it.first + cell->indexCoordinates.first;
             int j = it.second + cell->indexCoordinates.second;
-            if (cellIsValid(this->getCell(i,j))){
+            if (cellIsValid(i,j)){
                 v.push_back(this->getCell(i,j));
             }
         }
