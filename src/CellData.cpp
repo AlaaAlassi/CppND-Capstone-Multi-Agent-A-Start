@@ -13,4 +13,5 @@ CellData::CellData(unsigned int row, unsigned int col, double cellSize)
     Cartesian2DPoint p1(p1_x,p1_y);
     Cartesian2DPoint p2(p2_x,p2_y);
     corners = std::make_unique<std::pair<Cartesian2DPoint,Cartesian2DPoint>>(p1,p2);
+    indexCoordinates = std::make_pair(rowIndex,columnsIndex);
 }

@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
     // construct dummy robots
     auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
-    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
+    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[34]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
     std::deque<std::shared_ptr<Robot>> busyRobots;
     busyRobots.push_back(rob1);
     busyRobots.push_back(rob2);
@@ -36,9 +36,11 @@ int main(int argc, char **argv)
     // run viewer thread
     std::thread simulationThread(&Graphics::run, &viewer);
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task(warehouse._map.getCell(10,10),warehouse._map.getCell(15,10));
-
-    Planner MultiAgentPlanner( rob1, task ,&(warehouse._map));
-    MultiAgentPlanner.planPath();
+    int t0 = 0;
+    Planner MultiAgentPlanner(&(warehouse._map));
+    MultiAgentPlanner.planPath(rob1,t0);
+    t0 = t0;
+    MultiAgentPlanner.planPath(rob2,t0);
 
 
     // execution loop
