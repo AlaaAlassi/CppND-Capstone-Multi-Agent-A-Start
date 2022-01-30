@@ -12,7 +12,7 @@ public:
     void planPath(shared_ptr<Robot> robot, int t0)
     {
         //create a random path to simulate a planner
-        std::cout << "robot #" <<  robot->getID() << " is planning" <<std::endl;
+        std::cout << "robot #" << robot->getID() << " is planning" << std::endl;
         int timeStamp = t0;
         if (robot->getID() == 1)
         {
