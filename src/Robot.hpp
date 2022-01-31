@@ -23,7 +23,7 @@ public:
     {
         if (isBusy())
         {
-            auto goal = _path.back()->cartesianPosition;
+            auto goal = _path.front()->cartesianPosition;
             double stepingDistance = 0.5;
             setGoal(goal);
             goalReached = false;
@@ -39,7 +39,7 @@ public:
             }
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
-            _path.pop_back();
+            _path.pop_front();
         }
         return true;
     }
@@ -82,6 +82,10 @@ public:
         cell->clearPassedTimeStampsSince(t0);
     }
 
+    shared_ptr<CellData> getParkingCell()
+    {
+        return _parkingCell;
+    }
     Cartesian2DPoint getPosition()
     {
         std::lock_guard<std::mutex> lck(mtx);

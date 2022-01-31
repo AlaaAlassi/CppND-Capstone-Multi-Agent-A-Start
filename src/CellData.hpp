@@ -25,7 +25,8 @@ struct CellData
     std::pair<int, int> indexCoordinates;
     bool visited = false;
     double Gvalue = 0;
-    double Hvalue = 0;
+    double Hvalue = std::numeric_limits<double>::max();
+
 
     void reserveCell(int timeStamp)
     {
@@ -40,12 +41,12 @@ struct CellData
             visitHistory.erase(it, visitHistory.end());
         }
     }
-    bool isReserverd(int timeStamp)
+    bool isReserverd()
     {
         bool found = false;
         if (!visitHistory.empty())
         {
-            found = std::find(visitHistory.begin(), visitHistory.end(), timeStamp) != visitHistory.end();
+            found = std::find(visitHistory.begin(), visitHistory.end(), _timeStamp) != visitHistory.end();
         }
         return found;
     }
@@ -57,6 +58,9 @@ struct CellData
         {
             std::cout << t << std::endl;
         }
+    }
+    void printIndices(){
+        cout << "Row "<< indexCoordinates.first << " " <<"Col "<< indexCoordinates.second << endl;
     }
 
     double distanceTo(shared_ptr<CellData> other)
@@ -73,6 +77,25 @@ struct CellData
         return dist;
     }
 
+    void setParent(shared_ptr<CellData> cell){
+        _parentCell = cell;
+        this->_timeStamp = _parentCell->_timeStamp +1;
+    }
+
+    void setTimeStamp(int t){
+        _timeStamp = t;
+    }
+
+    shared_ptr<CellData> getParentCell(){
+        return _parentCell;
+    }
+
+    int getTimeStamp(){
+        return _timeStamp;
+    }
+
 private:
     std::deque<int> visitHistory;
+    std::shared_ptr<CellData> _parentCell = nullptr;
+    int _timeStamp = 0;
 };
