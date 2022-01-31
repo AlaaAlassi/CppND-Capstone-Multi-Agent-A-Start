@@ -8,11 +8,11 @@ using namespace std;
 class Robot
 {
 public:
-    Robot(int id, shared_ptr<CellData> cell) : _id(id), _cell(cell){
+    Robot(int id, shared_ptr<CellData> cell) : _id(id), _parkingCell(cell){
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
     };
-    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _cell(cell), _radius(radius){
+    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _parkingCell(cell), _radius(radius){
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
     };
@@ -113,5 +113,5 @@ private:
     Cartesian2DPoint _goal = Cartesian2DPoint(_position.x, _position.y);
     double _radius = 10;
     std::deque <std::shared_ptr<CellData>> _path;
-    shared_ptr<CellData> _cell;
+    shared_ptr<CellData> _parkingCell;
 };
