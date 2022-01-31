@@ -75,9 +75,11 @@ public:
         _goal = g;
     };
 
-    void appendCellToPath(std::shared_ptr<CellData> cell)
+    void appendCellToPath(std::shared_ptr<CellData> cell, int timeStamp, int t0)
     {
+         cell->reserveCell(timeStamp);
         _path.push_front(cell);
+        cell->clearPassedTimeStampsSince(t0);
     }
 
     Cartesian2DPoint getPosition()

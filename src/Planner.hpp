@@ -22,10 +22,8 @@ public:
                 auto cell = mapHandler->_cells[j];
                 if (!cell->isReserverd(timeStamp))
                 {
-                    robot->appendCellToPath(cell);
-                    cell->reserveCell(timeStamp);
+                    robot->appendCellToPath(cell,timeStamp,t0);
                 }
-                cell->clearPassedTimeStampsSince(t0);
                 timeStamp = timeStamp + 1;
             }
         }
@@ -37,16 +35,13 @@ public:
                 auto cell = mapHandler->getCell(0, j);
                 if (!cell->isReserverd(timeStamp))
                 {
-                    robot->appendCellToPath(cell);
-                    cell->reserveCell(timeStamp);
+                    robot->appendCellToPath(cell,timeStamp,t0);
                 }
                 else
                 {
                     auto nCell = mapHandler->getNeighbours(cell)[2];
-                    robot->appendCellToPath(nCell);
-                    cell->reserveCell(timeStamp);
+                    robot->appendCellToPath(nCell,timeStamp,t0);
                 }
-                cell->clearPassedTimeStampsSince(t0);
                 timeStamp = timeStamp + 1;
             }
         }
