@@ -25,8 +25,8 @@ int main(int argc, char **argv)
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
 
     // construct dummy robots
-    auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
-    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[34]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
+    auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0], warehouse._map.getCellSize() * 0.5);
+    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[34], warehouse._map.getCellSize() * 0.5);
     std::deque<std::shared_ptr<Robot>> busyRobots;
     busyRobots.push_back(rob1);
     busyRobots.push_back(rob2);

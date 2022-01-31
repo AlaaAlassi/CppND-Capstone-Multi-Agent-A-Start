@@ -1,13 +1,21 @@
 #pragma once
 #include "Cartesian2DPoint.hpp"
+#include "CellData.hpp"
 #include <deque>
 #include <thread>
 
+using namespace std;
 class Robot
 {
 public:
-    Robot(int id, Cartesian2DPoint position) : _id(id), _position(position){};
-    Robot(int id, Cartesian2DPoint position, double radius) : _id(id), _position(position), _radius(radius){};
+    Robot(int id, shared_ptr<CellData> cell) : _id(id), _cell(cell){
+        _position.x = cell->cartesianPosition.x;
+        _position.y = cell->cartesianPosition.y;
+    };
+    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _cell(cell), _radius(radius){
+        _position.x = cell->cartesianPosition.x;
+        _position.y = cell->cartesianPosition.y;
+    };
     bool goalReached = false;
     std::mutex mtx;
 
@@ -105,4 +113,5 @@ private:
     Cartesian2DPoint _goal = Cartesian2DPoint(_position.x, _position.y);
     double _radius = 10;
     std::deque <std::shared_ptr<CellData>> _path;
+    shared_ptr<CellData> _cell;
 };
