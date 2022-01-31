@@ -39,8 +39,9 @@ int main(int argc, char **argv)
     int t0 = 0;
     Planner MultiAgentPlanner(&(warehouse._map));
     MultiAgentPlanner.planPath(rob1,task,t0);
-    t0 = t0;
-    //MultiAgentPlanner.planPath(rob2,task,t0);
+    t0 = t0+1;
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(warehouse._map.getCell(17,25),warehouse._map.getCell(0,20));
+    MultiAgentPlanner.planPath(rob2,task2,t0);
 
 
     // execution loop

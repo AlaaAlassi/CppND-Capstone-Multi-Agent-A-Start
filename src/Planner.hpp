@@ -37,6 +37,8 @@ public:
             if (currentCell->distanceTo(_task.first) <= 1e-7)
             {
                 constructFoundPath(currentCell);
+                resetMap();
+                Q.clear();
                 break;
             }
             this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -71,6 +73,12 @@ public:
             cell = cell->getParentCell();
         }
 
+    }
+
+    void resetMap(){
+        for(auto cell:mapHandler->_cells){
+            cell->visited = false;
+        }
     }
 
 private:
