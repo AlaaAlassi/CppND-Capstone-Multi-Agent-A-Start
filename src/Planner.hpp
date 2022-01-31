@@ -65,12 +65,10 @@ public:
     }
 
     void constructFoundPath(shared_ptr<CellData> cell){
-        auto c = cell;
-        while (c->getParentCell() != nullptr)
+        while (cell->getParentCell() != nullptr)
         {
-            c->printIndices();
-            _robot->appendCellToPath(c,cell->getTimeStamp(),_robot->getParkingCell()->getTimeStamp());
-            c = c->getParentCell();
+            _robot->appendCellToPath(cell,cell->getTimeStamp(),_robot->getParkingCell()->getTimeStamp());
+            cell = cell->getParentCell();
         }
 
     }

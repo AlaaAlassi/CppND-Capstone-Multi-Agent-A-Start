@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
     // run viewer thread
     std::thread simulationThread(&Graphics::run, &viewer);
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task(warehouse._map.getCell(0,10),warehouse._map.getCell(0,20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task(warehouse._map.getCell(17,26),warehouse._map.getCell(0,20));
     int t0 = 0;
     Planner MultiAgentPlanner(&(warehouse._map));
     MultiAgentPlanner.planPath(rob1,task,t0);
