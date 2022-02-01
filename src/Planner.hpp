@@ -55,8 +55,8 @@ public:
             if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd())
             {
                 neighbor->setParent(currentCell);
-                Q.push_back(neighbor);
                 neighbor->visited = true;
+                Q.push_back(neighbor);
             }
         }
     }
@@ -69,8 +69,9 @@ public:
     void constructFoundPath(shared_ptr<CellData> cell){
         while (cell->getParentCell() != nullptr)
         {
-            _robot->appendCellToPath(cell,cell->getTimeStamp(),_robot->getParkingCell()->getTimeStamp());
+            _robot->appendCellToPath(cell,_robot->getParkingCell()->getTimeStamp());
             cell = cell->getParentCell();
+            cell->printIndices();
         }
 
     }
@@ -78,6 +79,7 @@ public:
     void resetMap(){
         for(auto cell:mapHandler->_cells){
             cell->visited = false;
+            cell->reset();
         }
     }
 

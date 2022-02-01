@@ -27,9 +27,11 @@ int main(int argc, char **argv)
     // construct dummy robots
     auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0], warehouse._map.getCellSize() * 0.5);
     auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[34], warehouse._map.getCellSize() * 0.5);
+    auto rob3 = std::make_shared<Robot>(3, warehouse._map._cells[36], warehouse._map.getCellSize() * 0.5);
     std::deque<std::shared_ptr<Robot>> busyRobots;
     busyRobots.push_back(rob1);
     busyRobots.push_back(rob2);
+    busyRobots.push_back(rob3);
     viewer.setRobots(busyRobots);
     viewer.loadBackgroundImg();
 
@@ -42,6 +44,10 @@ int main(int argc, char **argv)
     t0 = t0+1;
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(warehouse._map.getCell(17,25),warehouse._map.getCell(0,20));
     MultiAgentPlanner.planPath(rob2,task2,t0);
+
+    t0 = t0+1;
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(warehouse._map.getCell(20,24),warehouse._map.getCell(0,20));
+    MultiAgentPlanner.planPath(rob3,task3,t0);
 
 
     // execution loop
