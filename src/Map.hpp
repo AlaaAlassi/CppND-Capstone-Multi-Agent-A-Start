@@ -19,8 +19,16 @@ public:
     };
     std::shared_ptr<CellData> getCell(int i, int j)
     {
-        int cellIndex = i * _sizeCol + j;
-        return _cells[cellIndex];
+        if (cellIsValid(i, j))
+        {
+            int cellIndex = i * _sizeCol + j;
+            return _cells[cellIndex];
+        }
+        else
+        {
+            cout << "Error[Class: Map][Method: getCell(i,j)]: Requst to acces a cell out of map bounds" << endl;
+            exit(EXIT_FAILURE);
+        }
     };
     void setCellValue(int i, int j, CellValue value)
     {
@@ -31,7 +39,7 @@ public:
     std::size_t getNumberOfColumns() { return _sizeCol; };
     std::size_t getNumberOfRows() { return _sizeRow; };
     double getCellSize() { return _cellSize; };
-    bool cellIsValid(int i,int j)
+    bool cellIsValid(int i, int j)
     {
         bool isValid = true;
         if (i >= getNumberOfRows() ||
@@ -42,14 +50,16 @@ public:
         return isValid;
     }
 
-    std::vector <std::shared_ptr<CellData>> getNeighbours(std::shared_ptr<CellData> cell)
+    std::vector<std::shared_ptr<CellData>> getNeighbours(std::shared_ptr<CellData> cell)
     {
-        std::vector <std::shared_ptr<CellData>> v;
-        for(auto &it:searchWindow){
+        std::vector<std::shared_ptr<CellData>> v;
+        for (auto &it : searchWindow)
+        {
             int i = it.first + cell->indexCoordinates.first;
             int j = it.second + cell->indexCoordinates.second;
-            if (cellIsValid(i,j)){
-                v.push_back(this->getCell(i,j));
+            if (cellIsValid(i, j))
+            {
+                v.push_back(this->getCell(i, j));
             }
         }
         return v;
@@ -58,10 +68,10 @@ public:
     std::vector<std::shared_ptr<CellData>> _cells;
 
 private:
-    const std::vector<std::pair<int, int>> searchWindow{make_pair( 0,  1),
-                                        make_pair( 0, -1),
-                                        make_pair( 1,  0),
-                                        make_pair(-1,  0)};
+    const std::vector<std::pair<int, int>> searchWindow{make_pair(0, 1),
+                                                        make_pair(0, -1),
+                                                        make_pair(1, 0),
+                                                        make_pair(-1, 0)};
     std::size_t _sizeCol;
     std::size_t _sizeRow;
     double _cellSize;
