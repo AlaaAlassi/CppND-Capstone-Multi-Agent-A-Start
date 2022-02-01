@@ -48,11 +48,12 @@ public:
     void addNeighbors(shared_ptr<CellData> currentCell)
     {
         auto neighbors = mapHandler->getNeighbours(currentCell);
+        int NexttimeStamp = currentCell->getTimeStamp()+1;
         for (auto neighbor : neighbors)
         {
             neighbor->Hvalue = neighbor->distanceTo(_task.first);
             neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
-            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd())
+            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp))
             {
                 neighbor->setParent(currentCell);
                 neighbor->visited = true;
@@ -71,7 +72,6 @@ public:
         {
             _robot->appendCellToPath(cell,_robot->getParkingCell()->getTimeStamp());
             cell = cell->getParentCell();
-            cell->printIndices();
         }
 
     }

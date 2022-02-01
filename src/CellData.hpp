@@ -41,12 +41,12 @@ struct CellData
             visitHistory.erase(it, visitHistory.end());
         }
     }
-    bool isReserverd()
+    bool isReserverd(int timeStamp)
     {
         bool found = false;
         if (!visitHistory.empty())
         {
-            found = std::find(visitHistory.begin(), visitHistory.end(), _timeStamp) != visitHistory.end();
+            found = std::find(visitHistory.begin(), visitHistory.end(), timeStamp) != visitHistory.end();
         }
         return found;
     }
