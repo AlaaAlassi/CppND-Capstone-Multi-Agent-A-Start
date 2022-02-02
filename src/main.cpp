@@ -4,7 +4,9 @@
 #include "Warehouse.hpp"
 #include "Robot.hpp"
 #include "Graphics.hpp"
+#include "Planner.hpp"
 #include <vector>
+#include <deque>
 #include <thread>
 #include <future>
 
@@ -23,9 +25,9 @@ int main(int argc, char **argv)
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
 
     // construct dummy robots
-    auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
-    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[0]->cartesianPosition, warehouse._map.getCellSize() * 0.5);
-    std::vector<std::shared_ptr<Robot>> busyRobots;
+    auto rob1 = std::make_shared<Robot>(1, warehouse._map._cells[0], warehouse._map.getCellSize() * 0.5);
+    auto rob2 = std::make_shared<Robot>(2, warehouse._map._cells[34], warehouse._map.getCellSize() * 0.5);
+    std::deque<std::shared_ptr<Robot>> busyRobots;
     busyRobots.push_back(rob1);
     busyRobots.push_back(rob2);
     viewer.setRobots(busyRobots);
@@ -33,20 +35,16 @@ int main(int argc, char **argv)
 
     // run viewer thread
     std::thread simulationThread(&Graphics::run, &viewer);
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task(warehouse._map.getCell(10,10),warehouse._map.getCell(15,10));
+    int t0 = 0;
+    Planner MultiAgentPlanner(&(warehouse._map));
+    MultiAgentPlanner.planPath(rob1,t0);
+    t0 = t0;
+    MultiAgentPlanner.planPath(rob2,t0);
 
-    //create a path
+
+    // execution loop
     std::mutex mtx;
-    for (int j = 0; j < 20; j++)
-    {
-        std::lock_guard lg(mtx);
-        rob1->appendCellToPath(warehouse._map._cells[j]);
-    }
-        for (int j = 0; j < 5; j++)
-    {
-        std::lock_guard lg(mtx);
-        rob2->appendCellToPath(warehouse._map.getCell(j,1));
-    }
-
     while (!busyRobots.empty())
     {
         std::vector<std::future<bool>> ftrs;

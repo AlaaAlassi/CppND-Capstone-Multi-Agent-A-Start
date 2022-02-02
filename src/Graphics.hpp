@@ -13,7 +13,7 @@ public:
     Graphics(int windowLength,int windowWidth,Map &map);
 
     // getters / setters
-    void setRobots(std::vector<std::shared_ptr<Robot>> robot) { _robots = robot; };
+    void setRobots(std::deque<std::shared_ptr<Robot>> robot) { _robots = robot; };
 
     // typical behaviour methods
     void run();
@@ -21,7 +21,7 @@ public:
         // typical behaviour methods
     void drawRobots();
     void drawCell(std::shared_ptr<CellData> cell, cv::Mat & image);
-    std::vector<std::shared_ptr<Robot>> _robots;
+    std::deque<std::shared_ptr<Robot>> _robots;
 
 private:
     // member variables
