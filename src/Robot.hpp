@@ -8,13 +8,15 @@ using namespace std;
 class Robot
 {
 public:
-    Robot(int id, shared_ptr<CellData> cell) : _id(id), _parkingCell(cell){
+    Robot(int id, shared_ptr<CellData> cell) : _id(id){
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
+        setNewPrkingCell(cell);
     };
-    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _parkingCell(cell), _radius(radius){
+    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _radius(radius){
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
+        setNewPrkingCell(cell);
     };
     bool goalReached = false;
     std::mutex mtx;
@@ -24,7 +26,7 @@ public:
         if (isBusy())
         {
             auto goal = _path.front()->cartesianPosition;
-            double stepingDistance = 0.5;
+            double stepingDistance = 0.3;
             setGoal(goal);
             goalReached = false;
             auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
@@ -74,6 +76,17 @@ public:
     {
         _goal = g;
     };
+
+    void setNewPrkingCell(shared_ptr<CellData> cell){
+        resetParkingCell();
+        _parkingCell = cell;
+        _parkingCell->aRobotIsParkingHere = true;
+    }
+
+    void resetParkingCell(){
+        if(_parkingCell != nullptr)
+        _parkingCell->aRobotIsParkingHere = false;
+    }
 
     void appendCellToPath(std::shared_ptr<CellData> cell, int t0)
     {

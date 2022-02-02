@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     MultiAgentPlanner.planPath(rob2,task2,t0);
 
     t0 = t0+1;
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(warehouse._map.getCell(17,27),warehouse._map.getCell(0,20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(warehouse._map.getCell(17,25),warehouse._map.getCell(0,20));
     MultiAgentPlanner.planPath(rob3,task3,t0);
 
 

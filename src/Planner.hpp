@@ -53,7 +53,7 @@ public:
         {
             neighbor->Hvalue = neighbor->distanceTo(_task.first);
             neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
-            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp))
+            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp) && !neighbor->aRobotIsParkingHere)
             {
                 neighbor->setParent(currentCell);
                 neighbor->visited = true;
@@ -68,6 +68,8 @@ public:
     }
 
     void constructFoundPath(shared_ptr<CellData> cell){
+        // set the final goal cell as a parking cell
+        _robot->setNewPrkingCell(cell);
         while (cell->getParentCell() != nullptr)
         {
             _robot->appendCellToPath(cell,_robot->getParkingCell()->getTimeStamp());

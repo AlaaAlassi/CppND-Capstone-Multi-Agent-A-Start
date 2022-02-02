@@ -24,6 +24,7 @@ struct CellData
     std::unique_ptr<std::pair<Cartesian2DPoint, Cartesian2DPoint>> corners;
     std::pair<int, int> indexCoordinates;
     bool visited = false;
+    bool aRobotIsParkingHere = false;
     double Gvalue = 0;
     double Hvalue = std::numeric_limits<double>::max();
 
