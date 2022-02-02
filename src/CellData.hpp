@@ -25,11 +25,12 @@ struct CellData
     std::pair<int, int> indexCoordinates;
     bool visited = false;
     double Gvalue = 0;
-    double Hvalue = 0;
+    double Hvalue = std::numeric_limits<double>::max();
 
-    void reserveCell(int timeStamp)
+
+    void reserveCell()
     {
-        visitHistory.push_front(timeStamp);
+        visitHistory.push_front(_timeStamp);
     }
     void clearPassedTimeStampsSince(int timeStamp)
     {
@@ -58,6 +59,9 @@ struct CellData
             std::cout << t << std::endl;
         }
     }
+    void printIndices(){
+        cout << "Row "<< indexCoordinates.first << " " <<"Col "<< indexCoordinates.second << endl;
+    }
 
     double distanceTo(shared_ptr<CellData> other)
     {
@@ -73,6 +77,29 @@ struct CellData
         return dist;
     }
 
+    void setParent(shared_ptr<CellData> cell){
+        _parentCell = cell;
+        shared_ptr<CellData> c = _parentCell.lock();
+        this->_timeStamp = c->_timeStamp +1;
+    }
+
+    void setTimeStamp(int t){
+        _timeStamp = t;
+    }
+
+    shared_ptr<CellData> getParentCell(){
+        return _parentCell.lock();
+    }
+
+    int getTimeStamp(){
+        return _timeStamp;
+    }
+    void reset(){
+        _parentCell.reset();
+    }
+
 private:
     std::deque<int> visitHistory;
+    std::weak_ptr<CellData> _parentCell;
+    int _timeStamp = 0;
 };
