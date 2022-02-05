@@ -53,7 +53,7 @@ public:
         {
             neighbor->Hvalue = neighbor->distanceTo(_task.first);
             neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
-            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp) && !neighbor->aRobotIsParkingHere)
+            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp) && !neighbor->isReserverd(currentCell->getTimeStamp())&& !neighbor->aRobotIsParkingHere)
             {
                 neighbor->setParent(currentCell);
                 neighbor->visited = true;
@@ -72,8 +72,10 @@ public:
         _robot->setNewPrkingCell(cell);
         while (cell->getParentCell() != nullptr)
         {
+            cell->printVisitHistory();
             _robot->appendCellToPath(cell,_robot->getParkingCell()->getTimeStamp());
             cell = cell->getParentCell();
+
         }
 
     }
