@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <functional>
+
 
 using namespace std;
 enum CellValue
@@ -51,6 +53,11 @@ struct CellData
         }
         return found;
     }
+
+    bool isReserverdAnyTimeInFuture(){
+        return std::find_if(visitHistory.begin(), visitHistory.end(),bind2nd(greater<int>(),_timeStamp)) != visitHistory.end();
+    }
+
     void printVisitHistory()
     {
         std::cout << "row " << rowIndex << " "
