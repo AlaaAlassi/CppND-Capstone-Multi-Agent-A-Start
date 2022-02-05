@@ -5,7 +5,6 @@
 #include "Robot.hpp"
 #include "Graphics.hpp"
 #include "Planner.hpp"
-#include "MessageQueue.hpp"
 #include <vector>
 #include <deque>
 #include <thread>
@@ -62,7 +61,6 @@ int main(int argc, char **argv)
     tasks.push_back(task3);
     tasks.push_back(task4);
 
-    MessageQueue<std::shared_ptr<Robot>> cycleQueue;
     int t0 = 0;
     while (true)
     {
