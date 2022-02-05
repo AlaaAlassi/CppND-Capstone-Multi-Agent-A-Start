@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <functional>
+
 
 using namespace std;
 enum CellValue
@@ -24,6 +26,7 @@ struct CellData
     std::unique_ptr<std::pair<Cartesian2DPoint, Cartesian2DPoint>> corners;
     std::pair<int, int> indexCoordinates;
     bool visited = false;
+    bool aRobotIsParkingHere = false;
     double Gvalue = 0;
     double Hvalue = std::numeric_limits<double>::max();
 
@@ -50,6 +53,11 @@ struct CellData
         }
         return found;
     }
+
+    bool isReserverdAnyTimeInFuture(){
+        return std::find_if(visitHistory.begin(), visitHistory.end(),bind2nd(greater<int>(),_timeStamp)) != visitHistory.end();
+    }
+
     void printVisitHistory()
     {
         std::cout << "row " << rowIndex << " "
