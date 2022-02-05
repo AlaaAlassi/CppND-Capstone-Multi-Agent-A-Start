@@ -23,10 +23,11 @@ public:
 
     bool trackNextPathPoint()
     {
+        resetParkingCell();
         if (isBusy())
         {
             auto goal = _path.front()->cartesianPosition;
-            double stepingDistance = 0.3;
+            double stepingDistance = 0.1;
             setGoal(goal);
             goalReached = false;
             auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
@@ -41,6 +42,9 @@ public:
             }
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
+            if(_path.size() == 1){
+                this->setNewPrkingCell(_path.front());
+            }
             _path.pop_front();
         }
         return true;

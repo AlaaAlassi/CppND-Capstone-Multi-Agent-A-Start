@@ -15,6 +15,7 @@ public:
     Planner(Map *map) : mapHandler(map){};
     void planPath(shared_ptr<Robot> robot, pair<shared_ptr<CellData>, shared_ptr<CellData>> task, int t0)
     {
+        _t0 = t0;
         _task = task;
         _robot = robot;
         // create a random path to simulate a planner
@@ -72,11 +73,10 @@ public:
 
     void constructFoundPath(shared_ptr<CellData> cell)
     {
-        // set the final goal cell as a parking cell
-        _robot->setNewPrkingCell(cell);
         while (cell->getParentCell() != nullptr)
         {
-            _robot->appendCellToPath(cell, _robot->getParkingCell()->getTimeStamp());
+            cell->printVisitHistory();
+            _robot->appendCellToPath(cell, _t0);
             cell = cell->getParentCell();
         }
     }
