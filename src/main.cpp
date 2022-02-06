@@ -25,10 +25,10 @@ int main(int argc, char **argv)
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
 
     // construct dummy robots
-    auto rob1 = std::make_shared<Robot>(1, warehouse._map.getCell(0, 1), warehouse._map.getCellSize() * 0.5);
+    auto rob1 = std::make_shared<Robot>(1, warehouse._map.getCell(0, 0), warehouse._map.getCellSize() * 0.5);
     auto rob2 = std::make_shared<Robot>(2, warehouse._map.getCell(0, 34), warehouse._map.getCellSize() * 0.5);
     auto rob3 = std::make_shared<Robot>(3, warehouse._map.getCell(1, 0), warehouse._map.getCellSize() * 0.5);
-    auto rob4 = std::make_shared<Robot>(4, warehouse._map.getCell(2, 33), warehouse._map.getCellSize() * 0.5);
+    auto rob4 = std::make_shared<Robot>(4, warehouse._map.getCell(1, 34), warehouse._map.getCellSize() * 0.5);
     std::deque<std::shared_ptr<Robot>> busyRobots;
     std::deque<std::shared_ptr<Robot>> availableRobots;
     availableRobots.push_back(rob1);
@@ -41,18 +41,18 @@ int main(int argc, char **argv)
 
     // run viewer thread
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(warehouse._map.getCell(0, 33), warehouse._map.getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(warehouse._map.getCell(17, 18), warehouse._map.getCell(0, 20));
 
     Planner MultiAgentPlanner(&(warehouse._map));
     // MultiAgentPlanner.planPath(rob1,task,t0);
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(warehouse._map.getCell(0, 20), warehouse._map.getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(warehouse._map.getCell(15, 16), warehouse._map.getCell(0, 20));
     // MultiAgentPlanner.planPath(rob2,task2,t0);
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(warehouse._map.getCell(0, 32), warehouse._map.getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(warehouse._map.getCell(15, 18), warehouse._map.getCell(0, 20));
     // MultiAgentPlanner.planPath(rob3,task3,t0);
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(warehouse._map.getCell(0, 5), warehouse._map.getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(warehouse._map.getCell(17, 16), warehouse._map.getCell(0, 20));
     // MultiAgentPlanner.planPath(rob4,task4,t0);
 
     deque<pair<shared_ptr<CellData>, shared_ptr<CellData>>> tasks;
