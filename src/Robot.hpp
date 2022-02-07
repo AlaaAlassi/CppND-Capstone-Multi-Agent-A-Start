@@ -23,7 +23,7 @@ public:
 
     bool trackNextPathPoint()
     {
-        if (isBusy())
+        while (isBusy())
         {
             auto goal = _path.front()->cartesianPosition;
             double stepingDistance = 0.3;

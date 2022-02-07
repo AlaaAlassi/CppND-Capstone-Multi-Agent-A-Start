@@ -14,7 +14,7 @@ public:
 private:
 std::mutex _mux;
 std::condition_variable _cond;
-std::deque<std::shared_ptr<T>> _queue;
+std::deque<T> _queue;
 };
 
 
