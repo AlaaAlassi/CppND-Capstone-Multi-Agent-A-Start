@@ -46,7 +46,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
             busyRobots->send(std::move(rob));
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
             t0 = t0 + 1;
         }
     }
@@ -82,21 +82,24 @@ int main(int argc, char **argv)
 
     std::mutex mtx;
     fleet.clear();
+    std::vector<std::thread>  moveThread;
     while (true)
     {
         shared_ptr<Robot>  robot = busyRobots->receive();
         std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
-         std::future<bool> ftr;
+
+         moveThread.emplace_back(&Robot::trackNextPathPoint, robot);
              if (robot->isBusy())
              {
-                 ftr = std::async(std::launch::async, &Robot::trackNextPathPoint, robot);
+
              }
              else
              {
                  std::cout << "robot #" << robot->getID() << " is done" << std::endl;
-                 std::lock_guard lg(mtx);
+                 moveThread.back().join();
              }
     }
+
     std::cout << "exit" << std::endl;
     // wait for the user to press any key:
     simulationThread.join();
