@@ -82,22 +82,16 @@ int main(int argc, char **argv)
 
     std::mutex mtx;
     fleet.clear();
-    std::vector<std::thread>  moveThread;
+    std::vector<std::future<bool>>  moveThread;
     while (true)
     {
         shared_ptr<Robot>  robot = busyRobots->receive();
         std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
 
-         moveThread.emplace_back(&Robot::trackNextPathPoint, robot);
-             if (robot->isBusy())
-             {
+         moveThread.emplace_back(async(std::launch::async,&Robot::trackNextPathPoint, robot));
 
-             }
-             else
-             {
-                 std::cout << "robot #" << robot->getID() << " is done" << std::endl;
-                 moveThread.back().join();
-             }
+                 std::cout << "robot #" << moveThread.back().valid() << " is done" << std::endl;
+
     }
 
     std::cout << "exit" << std::endl;
