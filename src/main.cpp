@@ -29,20 +29,24 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(map->getCell(17, 16), map->getCell(0, 20));
     // MultiAgentPlanner.planPath(rob4,task4,t0);
 
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(0, 3), map->getCell(0, 20));
+
     deque<pair<shared_ptr<CellData>, shared_ptr<CellData>>> tasks;
     tasks.push_back(task1);
     tasks.push_back(task2);
     tasks.push_back(task3);
     tasks.push_back(task4);
+    tasks.push_back(task5);
     Planner multiAgentPlanner(map);
 
     int t0 = 0;
     while (true)
     {
+        shared_ptr<Robot> rob = avialableRobots->receive();
+        std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
-            shared_ptr<Robot> rob = avialableRobots->receive();
-            std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
             busyRobots->send(std::move(rob));
@@ -73,7 +77,7 @@ int main(int argc, char **argv)
     shared_ptr<GenericQueue<shared_ptr<Robot>>> busyRobots = std::make_shared<GenericQueue<shared_ptr<Robot>>>();
     shared_ptr<GenericQueue<shared_ptr<Robot>>> availableRobots = std::make_shared<GenericQueue<shared_ptr<Robot>>>();
 
-    for (auto robot:fleet)
+    for (auto robot : fleet)
     {
         availableRobots->send(std::move(robot));
     }
@@ -82,16 +86,29 @@ int main(int argc, char **argv)
 
     std::mutex mtx;
     fleet.clear();
-    std::vector<std::future<bool>>  moveThread;
+    std::vector<std::future<shared_ptr<Robot>>> moveThread;
     while (true)
     {
-        shared_ptr<Robot>  robot = busyRobots->receive();
-        std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+        if (!busyRobots->_queue.empty())
+        {
+            shared_ptr<Robot> robot = std::move(busyRobots->_queue.front());
+            busyRobots->_queue.pop_front();
+            std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+            moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
 
-         moveThread.emplace_back(async(std::launch::async,&Robot::trackNextPathPoint, robot));
+            // std::cout << "robot #" <<  << " is done" << std::endl;
+        }
+        for (int i = 0; i < moveThread.size(); i++)
+        {
+            if ((moveThread[i].wait_for(chrono::milliseconds(1))) == future_status::ready)
+            {
+                // std::cout << "robot #" << moveThread[i].get()->getID() << " is done" << std::endl;
+                availableRobots->send(move(moveThread[i].get()));
+                moveThread.erase(moveThread.begin() + i);
+            };
+        }
 
-                 std::cout << "robot #" << moveThread.back().valid() << " is done" << std::endl;
-
+        // this_thread::sleep_for();
     }
 
     std::cout << "exit" << std::endl;
