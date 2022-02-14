@@ -12,7 +12,6 @@
 #include <future>
 #include <random>
 
-
 using namespace cv;
 
 const int MAX_MONITOR_LENGTH = 1080;
@@ -53,16 +52,22 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
         int j = dis(gen);
         pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
         tasks.push_back(task6);
+        auto tic = std::chrono::steady_clock::now();
         shared_ptr<Robot> rob = avialableRobots->receive();
-        std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+        // std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
 
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - tic);
+            std::cout << "elapsed " << elapsed.count() << std::endl;
+            std::cout << "rem" << elapsed.count() % 1000 << std::endl;
+            this_thread::sleep_for(chrono::milliseconds(1000 - elapsed.count() % 1000));
+            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
+            std::cout << "elapsed sec" << tStamp.count() << std::endl;
+            t0 = t0 + tStamp.count();
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
             busyRobots->send(std::move(rob));
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            t0 = t0 + 1;
         }
     }
 }
@@ -93,6 +98,7 @@ int main(int argc, char **argv)
 
     for (auto robot : fleet)
     {
+
         availableRobots->send(std::move(robot));
     }
 
@@ -107,7 +113,7 @@ int main(int argc, char **argv)
         {
             shared_ptr<Robot> robot = std::move(busyRobots->_queue.front());
             busyRobots->_queue.pop_front();
-            std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+            // std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
 
             // std::cout << "robot #" <<  << " is done" << std::endl;

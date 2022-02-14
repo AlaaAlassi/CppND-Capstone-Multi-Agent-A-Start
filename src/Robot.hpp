@@ -30,6 +30,8 @@ public:
             setGoal(goal);
             goalReached = false;
             auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
+            n= 1000;
+            stepingDistance = this->distanceToPoint(goal)/n;
             for (int i = 0; i < n; i++)
             {
                 double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
