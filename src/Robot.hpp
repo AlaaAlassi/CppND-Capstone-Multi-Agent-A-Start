@@ -5,7 +5,7 @@
 #include <thread>
 
 using namespace std;
-class Robot
+class Robot : public std::enable_shared_from_this<Robot>
 {
 public:
     Robot(int id, shared_ptr<CellData> cell) : _id(id){
@@ -21,15 +21,15 @@ public:
     bool goalReached = false;
     std::mutex mtx;
 
-    bool trackNextPathPoint()
+    shared_ptr<Robot> trackNextPathPoint()
     {
-        if (isBusy())
+        while (isBusy())
         {
             auto goal = _path.front()->cartesianPosition;
-            double stepingDistance = 0.3;
             setGoal(goal);
             goalReached = false;
-            auto n = std::round(this->distanceToPoint(goal) / stepingDistance);
+            int n= 1000;
+            double stepingDistance = this->distanceToPoint(goal)/n;
             for (int i = 0; i < n; i++)
             {
                 double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
@@ -43,7 +43,7 @@ public:
             std::lock_guard<std::mutex> lck(mtx);
             _path.pop_front();
         }
-        return true;
+        return shared_from_this();
     }
 
     void step(double dx, double dy)
@@ -133,4 +133,5 @@ private:
     double _radius = 10;
     std::deque <std::shared_ptr<CellData>> _path;
     shared_ptr<CellData> _parkingCell;
+    thread t_;
 };
