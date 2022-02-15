@@ -10,6 +10,7 @@
 #include <deque>
 #include <thread>
 #include <future>
+#include <random>
 
 using namespace cv;
 
@@ -38,20 +39,32 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     tasks.push_back(task4);
     tasks.push_back(task5);
     Planner multiAgentPlanner(map);
+    int minDuration = 0;
+    int maxDuration = 20;
+    std::random_device dev;
+    std::mt19937 gen(dev());
+    std::uniform_int_distribution<int> dis(minDuration, maxDuration);
 
     int t0 = 0;
     while (true)
     {
+        int i = dis(gen);
+        int j = dis(gen);
+        pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
+        tasks.push_back(task6);
+        auto tic = std::chrono::steady_clock::now();
         shared_ptr<Robot> rob = avialableRobots->receive();
-        std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+        // std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
 
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - tic);
+            this_thread::sleep_for(chrono::milliseconds(1000 - elapsed.count() % 1000));
+            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
+            t0 = t0 + tStamp.count();
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
             busyRobots->send(std::move(rob));
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            t0 = t0 + 1;
         }
     }
 }
@@ -71,6 +84,9 @@ int main(int argc, char **argv)
     auto rob3 = std::make_shared<Robot>(3, warehouse._map.getCell(1, 0), warehouse._map.getCellSize() * 0.5);
     auto rob4 = std::make_shared<Robot>(4, warehouse._map.getCell(1, 34), warehouse._map.getCellSize() * 0.5);
     deque<shared_ptr<Robot>> fleet{rob1, rob2, rob3, rob4};
+    /*for(int i=5;i<=20;i++){
+        fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
+    }*/
     viewer.setRobots(fleet);
     viewer.loadBackgroundImg();
     std::thread simulationThread(&Graphics::run, &viewer);
@@ -79,6 +95,7 @@ int main(int argc, char **argv)
 
     for (auto robot : fleet)
     {
+
         availableRobots->send(std::move(robot));
     }
 
@@ -93,7 +110,7 @@ int main(int argc, char **argv)
         {
             shared_ptr<Robot> robot = std::move(busyRobots->_queue.front());
             busyRobots->_queue.pop_front();
-            std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+            // std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
 
             // std::cout << "robot #" <<  << " is done" << std::endl;
@@ -102,7 +119,6 @@ int main(int argc, char **argv)
         {
             if ((moveThread[i].wait_for(chrono::milliseconds(1))) == future_status::ready)
             {
-                // std::cout << "robot #" << moveThread[i].get()->getID() << " is done" << std::endl;
                 availableRobots->send(move(moveThread[i].get()));
                 moveThread.erase(moveThread.begin() + i);
             };
