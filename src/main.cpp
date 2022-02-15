@@ -17,7 +17,7 @@ using namespace cv;
 const int MAX_MONITOR_LENGTH = 1080;
 const int MAX_MONITOR_WIDTH = 1920;
 
-void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots, shared_ptr<GenericQueue<shared_ptr<Robot>>> busyRobots, Map *map)
+void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots, shared_ptr<deque<shared_ptr<Robot>>> busyRobots, Map *map)
 {
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(map->getCell(17, 18), map->getCell(0, 20));
 
@@ -44,7 +44,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     std::random_device dev;
     std::mt19937 gen(dev());
     std::uniform_int_distribution<int> dis(minDuration, maxDuration);
-
+    std::mutex mtx;
     int t0 = 0;
     while (true)
     {
@@ -64,7 +64,8 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
             t0 = t0 + tStamp.count();
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
-            busyRobots->send(std::move(rob));
+            lock_guard<mutex> lg(mtx);
+            busyRobots->push_back(std::move(rob));
         }
     }
 }
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
     viewer.setRobots(fleet);
     viewer.loadBackgroundImg();
     std::thread simulationThread(&Graphics::run, &viewer);
-    shared_ptr<GenericQueue<shared_ptr<Robot>>> busyRobots = std::make_shared<GenericQueue<shared_ptr<Robot>>>();
+    shared_ptr<deque<shared_ptr<Robot>>> busyRobots = std::make_shared<deque<shared_ptr<Robot>>>();
     shared_ptr<GenericQueue<shared_ptr<Robot>>> availableRobots = std::make_shared<GenericQueue<shared_ptr<Robot>>>();
 
     for (auto robot : fleet)
@@ -106,10 +107,12 @@ int main(int argc, char **argv)
     std::vector<std::future<shared_ptr<Robot>>> moveThread;
     while (true)
     {
-        if (!busyRobots->_queue.empty())
+        unique_lock<mutex> uL(mtx);
+        if (!busyRobots->empty())
         {
-            shared_ptr<Robot> robot = std::move(busyRobots->_queue.front());
-            busyRobots->_queue.pop_front();
+            shared_ptr<Robot> robot = std::move(busyRobots->front());
+            busyRobots->pop_front();
+            uL.unlock();
             // std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
 

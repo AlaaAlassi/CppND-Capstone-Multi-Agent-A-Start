@@ -10,11 +10,11 @@ class GenericQueue
 public:
     void send(T && msg);
     T receive();
-    std::deque<T> _queue;
 
 private:
 std::mutex _mux;
 std::condition_variable _cond;
+std::deque<T> _queue;
 };
 
 
