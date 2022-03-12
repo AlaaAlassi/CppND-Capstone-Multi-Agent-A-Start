@@ -8,4 +8,6 @@ add_executable(
 target_link_libraries(
     collisionTest
     gtest
+    m_planner
+    ${OpenCV_LIBRARIES}
 )
