@@ -16,3 +16,5 @@ file(GLOB project_SRCS src/*.cpp) #src/*.h
 # Add project executable
 add_executable(MLA-Star ${project_SRCS})
 target_link_libraries(MLA-Star ${OpenCV_LIBRARIES})
+
+add_subdirectory(test)
