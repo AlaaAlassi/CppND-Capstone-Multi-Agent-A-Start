@@ -30,14 +30,23 @@ TEST(CollisionTest,BasicTest){
     deque<shared_ptr<Robot>> fleet{rob1, rob2};
     Graphics viewer = Graphics(windowLength, windowWidth, testMap);
     viewer.loadBackgroundImg();
-    //std::thread simulationThread(&Graphics::run, &viewer);
+    std::thread simulationThread(&Graphics::run, &viewer);
     viewer.setRobots(fleet);
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(testMap.getCell(0, 2), testMap.getCell(0, 0));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(testMap.getCell(0, 3), testMap.getCell(0, 0));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(testMap.getCell(0, 1), testMap.getCell(0, 0));
     Planner multiAgentPlanner(&testMap);
     int t0 = 0;
     multiAgentPlanner.planPath(rob1, task1, t0);
     std::vector<std::future<shared_ptr<Robot>>> moveThread;
     moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob1));
+
+    auto tic = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - tic);
+    this_thread::sleep_for(chrono::milliseconds(1000 - elapsed.count() % 1000));
+    auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
+    t0 = t0 + tStamp.count();
+    multiAgentPlanner.planPath(rob2, task2, t0);
+    moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob2));
 
     /*for (int i = 0; i < moveThread.size(); i++)
         {
@@ -47,9 +56,11 @@ TEST(CollisionTest,BasicTest){
             };
         }*/
 
-    ASSERT_EQ(rob1->getParkingCell()->columnsIndex,2);
+    rob1->getParkingCell()->printVisitHistory();
 
-    //simulationThread.join();
+    ASSERT_EQ(rob1->getParkingCell()->columnsIndex,3);
+
+    simulationThread.join();
 }
 
 int main(int argc, char **argv){
