@@ -22,6 +22,7 @@ TEST(CollisionTest,BasicTest){
     size_t numberOfColumns = 5;
     size_t numberOfRows = 5;
     Map testMap = Map(numberOfColumns,numberOfRows,cellSize);
+    testMap.setCellValue(0,2,CellValue::occupied);
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
