@@ -37,7 +37,7 @@ public:
                 double dy = cos_heading * stepingDistance;
                 double dx = sin_heading * stepingDistance;
                 step(dx, dy);
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                std::this_thread::sleep_for(std::chrono::microseconds(900));
             }
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
