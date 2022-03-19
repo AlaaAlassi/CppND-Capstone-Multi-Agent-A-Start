@@ -96,7 +96,7 @@ public:
     {
          cell->reserveCell();
         _path.push_front(cell);
-        cell->clearPassedTimeStampsSince(t0);
+        //cell->clearPassedTimeStampsSince(t0);
     }
 
     shared_ptr<CellData> getParkingCell()
@@ -138,5 +138,5 @@ private:
     std::deque <std::shared_ptr<CellData>> _path;
     shared_ptr<CellData> _parkingCell;
     thread t_;
-    typedef std::chrono::duration<int, std::ratio<1, 500>> _Frame_duration;
+    typedef std::chrono::duration<int, std::ratio<1, 520>> _Frame_duration;
 };
