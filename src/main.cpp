@@ -30,7 +30,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(map->getCell(17, 16), map->getCell(0, 20));
     // MultiAgentPlanner.planPath(rob4,task4,t0);
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(0, 3), map->getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(7, 0), map->getCell(0, 20));
 
     deque<pair<shared_ptr<CellData>, shared_ptr<CellData>>> tasks;
     tasks.push_back(task1);
@@ -54,22 +54,33 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
 
         int i = dis(gen);
         int j = dis(gen);
-        pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
-        tasks.push_back(task6);
+        //pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
+        //tasks.push_back(task6);
         shared_ptr<Robot> rob = avialableRobots->receive();
         // std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
+            while (rob != nullptr )
+            {
 
             auto end_time = tic + _Frame_duration(1);
             std::this_thread::sleep_until(end_time);
             auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic0);
-            t0 = tStamp.count()-1;
+            t0 = tStamp.count();
             cout << "t0 = " << t0 <<"\n";
-            multiAgentPlanner.planPath(rob, tasks.front(), t0);
+            bool pathFound = multiAgentPlanner.planPath(rob, tasks.front(), t0);
+            if(pathFound){
+                if(rob->getID() == 4){
+                    auto cell = rob->getPath().at(34);
+                    cell->printIndices();
+                   cell->printVisitHistory();
+                }
             tasks.pop_front();
             lock_guard<mutex> lg(mtx);
             busyRobots->push_back(std::move(rob));
+            }
+            tic = std::chrono::steady_clock::now();
+            }
         }
     }
 }
