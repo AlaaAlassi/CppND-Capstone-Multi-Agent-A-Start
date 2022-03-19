@@ -13,7 +13,7 @@ class Planner
 {
 public:
     Planner(Map *map) : mapHandler(map){};
-    void planPath(shared_ptr<Robot> robot, pair<shared_ptr<CellData>, shared_ptr<CellData>> task, int t0)
+    bool planPath(shared_ptr<Robot> robot, pair<shared_ptr<CellData>, shared_ptr<CellData>> task, int t0)
     {
         _task = task;
         _robot = robot;
@@ -24,6 +24,7 @@ public:
         currentCell->setTimeStamp(timeStamp);
         currentCell->visited = true;
         Q.push_back(currentCell);
+        bool pathFound  = false;
         while (!Q.empty())
         {
             addNeighbors(currentCell);
@@ -39,12 +40,17 @@ public:
                 if (!currentCell->isReserverdAnyTimeInFuture())
                 {
                     constructFoundPath(currentCell);
+                    pathFound = true;
                     break;
                 }
             }
         }
+        if(!pathFound){
+             std::cout << "robot #" << robot->getID() << " failed to find a path" << std::endl;
+        }
         resetMap();
         Q.clear();
+        return pathFound;
     };
 
     void addNeighbors(shared_ptr<CellData> currentCell)
