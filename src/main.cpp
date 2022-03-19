@@ -46,9 +46,12 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     std::uniform_int_distribution<int> dis(minDuration, maxDuration);
     std::mutex mtx;
     int t0 = 0;
-    auto tic = std::chrono::steady_clock::now();
+    typedef std::chrono::duration<int, std::ratio<1, 1>> _Frame_duration;
+    auto tic0 = std::chrono::steady_clock::now();
     while (true)
     {
+            auto tic = std::chrono::steady_clock::now();
+
         int i = dis(gen);
         int j = dis(gen);
         pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
@@ -58,11 +61,11 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
         if (!tasks.empty())
         {
 
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - tic);
-            this_thread::sleep_for(chrono::milliseconds(1000 - elapsed.count() % 1000));
-            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
-            t0 = tStamp.count();
-            //cout << "t0 = " << t0 <<"\n";
+            auto end_time = tic + _Frame_duration(1);
+            std::this_thread::sleep_until(end_time);
+            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic0);
+            t0 = tStamp.count()-1;
+            cout << "t0 = " << t0 <<"\n";
             multiAgentPlanner.planPath(rob, tasks.front(), t0);
             tasks.pop_front();
             lock_guard<mutex> lg(mtx);

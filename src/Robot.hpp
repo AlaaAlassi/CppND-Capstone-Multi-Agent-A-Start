@@ -28,17 +28,21 @@ public:
             auto goal = _path.front()->cartesianPosition;
             setGoal(goal);
             goalReached = false;
-            int n= 1000;
+            int n= 500;
             double stepingDistance = this->distanceToPoint(goal)/n;
+            auto t0 = std::chrono::steady_clock::now();
             for (int i = 0; i < n; i++)
             {
+                auto start_time = std::chrono::steady_clock::now();
                 double cos_heading = (goal.y - _position.y) / distanceToPoint(goal);
                 double sin_heading = (goal.x - _position.x) / distanceToPoint(goal);
                 double dy = cos_heading * stepingDistance;
                 double dx = sin_heading * stepingDistance;
                 step(dx, dy);
-                std::this_thread::sleep_for(std::chrono::microseconds(900));
+                auto end_time = start_time + _Frame_duration(1);
+                std::this_thread::sleep_until(end_time);
             }
+            //cout << (std::chrono::steady_clock::now()-t0).count()/1000000<<"\n";
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
             _path.pop_front();
@@ -134,4 +138,5 @@ private:
     std::deque <std::shared_ptr<CellData>> _path;
     shared_ptr<CellData> _parkingCell;
     thread t_;
+    typedef std::chrono::duration<int, std::ratio<1, 500>> _Frame_duration;
 };
