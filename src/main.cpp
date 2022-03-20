@@ -58,21 +58,19 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
         tasks.push_back(task6);
         tasks.front().first->printIndices();
         shared_ptr<Robot> rob = avialableRobots->receive();
-        // std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+        std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
-
             auto end_time = tic + _Frame_duration(1);
             std::this_thread::sleep_until(end_time);
             auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic0);
             t0 = tStamp.count();
             bool pathFound = multiAgentPlanner.planPath(rob, tasks.front(), t0);
-            if(pathFound || true){
+            if(pathFound){
             tasks.pop_front();
             lock_guard<mutex> lg(mtx);
             busyRobots->push_back(std::move(rob));
             }
-            //tic = std::chrono::steady_clock::now();
         }
     }
 }
