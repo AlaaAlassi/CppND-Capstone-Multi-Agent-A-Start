@@ -61,7 +61,11 @@ public:
         {
             neighbor->Hvalue = neighbor->distanceTo(_task.first);
             neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
-            if (!neighbor->visited && neighbor->value != CellValue::occupied && !neighbor->isReserverd(NexttimeStamp) && !neighbor->isReserverd(currentCell->getTimeStamp()) && !neighbor->aRobotIsParkingHere)
+            if (!neighbor->visited
+             && neighbor->value != CellValue::occupied
+             && !neighbor->isReserverd(NexttimeStamp)
+             && !neighbor->isReserverd(currentCell->getTimeStamp())
+             && !neighbor->aRobotIsParkingHere)
             {
                 neighbor->setParent(currentCell);
                 neighbor->visited = true;
