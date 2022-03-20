@@ -38,6 +38,7 @@ TEST(CollisionTest,BasicTest){
     Planner multiAgentPlanner(&testMap);
     int t0 = 0;
     multiAgentPlanner.planPath(rob1, task1, t0);
+
     std::vector<std::future<shared_ptr<Robot>>> moveThread;
     moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob1));
 
@@ -47,19 +48,17 @@ TEST(CollisionTest,BasicTest){
     auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
     t0 = t0 + tStamp.count();
     multiAgentPlanner.planPath(rob2, task2, t0);
+
+    // if the planner is not consedering the path of the rob1 then the the two robots will collide at cell(1,2)
+    testMap.getCell(1,2)->printVisitHistory();
+
+    // the first robot is expected to visit cell(1,2) at t = 3 seconds
+    EXPECT_EQ(testMap.getCell(1,2)->isReserverd(3),true);
+
+    // the second robot is expected to visit cell(1,2) at t = 6 seconds
+    EXPECT_EQ(testMap.getCell(1,2)->isReserverd(6),true);
+
     moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob2));
-
-    /*for (int i = 0; i < moveThread.size(); i++)
-        {
-            if ((moveThread[i].wait_for(chrono::milliseconds(1))) == future_status::ready)
-            {
-                moveThread.erase(moveThread.begin() + i);
-            };
-        }*/
-
-    rob1->getParkingCell()->printVisitHistory();
-
-    ASSERT_EQ(rob1->getParkingCell()->columnsIndex,3);
 
     simulationThread.join();
 }
