@@ -18,7 +18,7 @@ const int MAX_MONITOR_WIDTH = 1920;
 
 TEST(CollisionTest,BasicTest){
 
-    double cellSize = 35; //meters/cell
+    double cellSize = 100; //meters/cell
     size_t numberOfColumns = 5;
     size_t numberOfRows = 5;
     Map testMap = Map(numberOfColumns,numberOfRows,cellSize);
