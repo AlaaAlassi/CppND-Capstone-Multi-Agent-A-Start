@@ -93,7 +93,7 @@ TEST(CollisionTest,OccupyingSameCell){
     t0 = t0 + tStamp.count();
     multiAgentPlanner.planPath(rob2, task2, t0);
 
-    EXPECT_EQ(testMap.getCell(1,2)->getVisitHistory().size(), 1);
+    EXPECT_EQ(testMap.getCell(1,3)->getVisitHistory().size(), 1);
 
     moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob2));
         for (int i = 0; i < moveThread.size(); i++)
