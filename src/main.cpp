@@ -19,44 +19,34 @@ const int MAX_MONITOR_WIDTH = 1920;
 
 void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots, shared_ptr<deque<shared_ptr<Robot>>> busyRobots, Map *map)
 {
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task1(map->getCell(17, 18), map->getCell(0, 20));
-
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task2(map->getCell(15, 16), map->getCell(0, 20));
-    // MultiAgentPlanner.planPath(rob2,task2,t0);
-
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task3(map->getCell(15, 18), map->getCell(0, 20));
-    // MultiAgentPlanner.planPath(rob3,task3,t0);
-
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(map->getCell(17, 16), map->getCell(0, 20));
-    // MultiAgentPlanner.planPath(rob4,task4,t0);
-
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(7, 0), map->getCell(0, 20));
 
     deque<pair<shared_ptr<CellData>, shared_ptr<CellData>>> tasks;
-    tasks.push_back(task1);
-    tasks.push_back(task2);
-    tasks.push_back(task3);
-    tasks.push_back(task4);
-    tasks.push_back(task5);
+    for(int j=18;j<=26;j++){
+        tasks.emplace_back(map->getCell(5, j), map->getCell(0, 0));
+    }
+
+    for(int j=18;j<=26;j++){
+        tasks.emplace_back(map->getCell(3, j), map->getCell(0, 0));
+    }
+
+    for(int j=7;j<=16;j++){
+        tasks.emplace_back(map->getCell(3, j), map->getCell(0, 0));
+    }
+
+    for(int j=7;j<=16;j++){
+        tasks.emplace_back(map->getCell(5, j), map->getCell(0, 0));
+    }
+
     Planner multiAgentPlanner(map);
     int minDuration = 0;
     int maxDuration = 20;
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    std::uniform_int_distribution<int> dis(minDuration, maxDuration);
     std::mutex mtx;
     int t0 = 0;
     typedef std::chrono::duration<int, std::ratio<1, 1>> _Frame_duration;
     auto tic0 = std::chrono::steady_clock::now();
     while (true)
     {
-            auto tic = std::chrono::steady_clock::now();
-
-        int i = dis(gen);
-        int j = dis(gen);
-        pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
-        tasks.push_back(task6);
-        tasks.front().first->printIndices();
+        auto tic = std::chrono::steady_clock::now();
         shared_ptr<Robot> rob = avialableRobots->receive();
         std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
@@ -67,9 +57,11 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
             t0 = tStamp.count();
             bool pathFound = multiAgentPlanner.planPath(rob, tasks.front(), t0);
             if(pathFound){
-            tasks.pop_front();
-            lock_guard<mutex> lg(mtx);
-            busyRobots->push_back(std::move(rob));
+                tasks.pop_front();
+                lock_guard<mutex> lg(mtx);
+                busyRobots->push_back(std::move(rob));
+            }else{
+                busyRobots->push_back(std::move(rob));
             }
         }
     }
@@ -84,15 +76,26 @@ int main(int argc, char **argv)
     int windowLength = int(aspectRatio * MAX_MONITOR_LENGTH);
     Graphics viewer = Graphics(windowLength, windowWidth, warehouse._map);
 
-    // construct dummy robots
-    auto rob1 = std::make_shared<Robot>(1, warehouse._map.getCell(0, 0), warehouse._map.getCellSize() * 0.5);
-    auto rob2 = std::make_shared<Robot>(2, warehouse._map.getCell(0, 34), warehouse._map.getCellSize() * 0.5);
-    auto rob3 = std::make_shared<Robot>(3, warehouse._map.getCell(1, 0), warehouse._map.getCellSize() * 0.5);
-    auto rob4 = std::make_shared<Robot>(4, warehouse._map.getCell(1, 34), warehouse._map.getCellSize() * 0.5);
-    deque<shared_ptr<Robot>> fleet{rob1, rob2, rob3, rob4};
-    for(int i=5;i<=20;i++){
-        fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
+    // construct a fleet of robots
+    deque<shared_ptr<Robot>> fleet;
+    for(int i=1;i<=19;i++){
+        if (i%2 == 0){
+            fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
+        }else{
+            fleet.emplace_back(std::make_shared<Robot>(i+19, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
+        }
     }
+
+    for(int i=1;i<=19;i++){
+        if (i%2 != 0){
+            fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
+        }else{
+            fleet.emplace_back(std::make_shared<Robot>(i+19+19, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
+        }
+    }
+
+
+
     viewer.setRobots(fleet);
     viewer.loadBackgroundImg();
     std::thread simulationThread(&Graphics::run, &viewer);
@@ -117,7 +120,7 @@ int main(int argc, char **argv)
             shared_ptr<Robot> robot = std::move(busyRobots->front());
             busyRobots->pop_front();
             uL.unlock();
-            // std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+            std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
 
             // std::cout << "robot #" <<  << " is done" << std::endl;
