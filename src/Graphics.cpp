@@ -17,7 +17,7 @@ Graphics::Graphics(int windowLength, int windowWidth, Map &map):_windowLength(wi
 
 void Graphics::run()
 {
-    while (true)
+    while (!_done)
     {
         drawRobots();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -117,4 +117,8 @@ void Graphics::drawCell(std::shared_ptr<CellData> cell, cv::Mat &image)
               thickness,
               LINE_8,
               shift);
+}
+
+void Graphics::exit(){
+    _done = true;
 }
