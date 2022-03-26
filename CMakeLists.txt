@@ -16,3 +16,8 @@ file(GLOB project_SRCS src/*.cpp) #src/*.h
 # Add project executable
 add_executable(MLA-Star ${project_SRCS})
 target_link_libraries(MLA-Star ${OpenCV_LIBRARIES})
+
+
+add_library(m_planner OBJECT src/CellData.cpp src/Map.hpp src/Graphics.cpp src/Robot.hpp)
+target_include_directories(m_planner PRIVATE ${OpenCV_LIBRARIES})
+add_subdirectory(test)

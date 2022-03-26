@@ -67,6 +67,11 @@ struct CellData
             std::cout << t << std::endl;
         }
     }
+
+    std::deque<int> getVisitHistory(){
+        return visitHistory;
+    }
+
     void printIndices(){
         cout << "Row "<< indexCoordinates.first << " " <<"Col "<< indexCoordinates.second << endl;
     }

@@ -17,6 +17,7 @@ public:
 
     // typical behaviour methods
     void run();
+    void exit();
     void loadBackgroundImg();
         // typical behaviour methods
     void drawRobots();
@@ -31,6 +32,7 @@ private:
     std::mutex mtx;
     int _windowLength;
     int _windowWidth;
+    bool _done = false;
 };
 
 #endif

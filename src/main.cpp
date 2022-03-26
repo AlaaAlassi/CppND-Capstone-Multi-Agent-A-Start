@@ -30,7 +30,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     pair<shared_ptr<CellData>, shared_ptr<CellData>> task4(map->getCell(17, 16), map->getCell(0, 20));
     // MultiAgentPlanner.planPath(rob4,task4,t0);
 
-    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(0, 3), map->getCell(0, 20));
+    pair<shared_ptr<CellData>, shared_ptr<CellData>> task5(map->getCell(7, 0), map->getCell(0, 20));
 
     deque<pair<shared_ptr<CellData>, shared_ptr<CellData>>> tasks;
     tasks.push_back(task1);
@@ -46,26 +46,31 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     std::uniform_int_distribution<int> dis(minDuration, maxDuration);
     std::mutex mtx;
     int t0 = 0;
+    typedef std::chrono::duration<int, std::ratio<1, 1>> _Frame_duration;
+    auto tic0 = std::chrono::steady_clock::now();
     while (true)
     {
+            auto tic = std::chrono::steady_clock::now();
+
         int i = dis(gen);
         int j = dis(gen);
         pair<shared_ptr<CellData>, shared_ptr<CellData>> task6(map->getCell(i, j), map->getCell(0, 20));
         tasks.push_back(task6);
-        auto tic = std::chrono::steady_clock::now();
+        tasks.front().first->printIndices();
         shared_ptr<Robot> rob = avialableRobots->receive();
-        // std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+        std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
         if (!tasks.empty())
         {
-
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - tic);
-            this_thread::sleep_for(chrono::milliseconds(1000 - elapsed.count() % 1000));
-            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic);
-            t0 = t0 + tStamp.count();
-            multiAgentPlanner.planPath(rob, tasks.front(), t0);
+            auto end_time = tic + _Frame_duration(1);
+            std::this_thread::sleep_until(end_time);
+            auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic0);
+            t0 = tStamp.count();
+            bool pathFound = multiAgentPlanner.planPath(rob, tasks.front(), t0);
+            if(pathFound){
             tasks.pop_front();
             lock_guard<mutex> lg(mtx);
             busyRobots->push_back(std::move(rob));
+            }
         }
     }
 }
@@ -85,9 +90,9 @@ int main(int argc, char **argv)
     auto rob3 = std::make_shared<Robot>(3, warehouse._map.getCell(1, 0), warehouse._map.getCellSize() * 0.5);
     auto rob4 = std::make_shared<Robot>(4, warehouse._map.getCell(1, 34), warehouse._map.getCellSize() * 0.5);
     deque<shared_ptr<Robot>> fleet{rob1, rob2, rob3, rob4};
-    /*for(int i=5;i<=20;i++){
+    for(int i=5;i<=20;i++){
         fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
-    }*/
+    }
     viewer.setRobots(fleet);
     viewer.loadBackgroundImg();
     std::thread simulationThread(&Graphics::run, &viewer);
@@ -96,7 +101,6 @@ int main(int argc, char **argv)
 
     for (auto robot : fleet)
     {
-
         availableRobots->send(std::move(robot));
     }
 
