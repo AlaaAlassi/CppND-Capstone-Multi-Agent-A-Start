@@ -24,7 +24,7 @@ public:
         currentCell->setTimeStamp(timeStamp);
         currentCell->visited = true;
         Q.push_back(currentCell);
-        bool pathFound  = false;
+        bool pathFound = false;
         while (!Q.empty())
         {
             addNeighbors(currentCell);
@@ -45,8 +45,9 @@ public:
                 }
             }
         }
-        if(!pathFound){
-             std::cout << "robot #" << robot->getID() << " failed to find a path" << std::endl;
+        if (!pathFound)
+        {
+            std::cout << "robot #" << robot->getID() << " failed to find a path" << std::endl;
         }
         resetMap();
         Q.clear();
@@ -62,10 +63,10 @@ public:
             neighbor->Hvalue = neighbor->distanceTo(_task.first);
             neighbor->Gvalue = currentCell->Gvalue + neighbor->distanceTo(currentCell);
             if (!neighbor->visited
-             && neighbor->value != CellValue::occupied
-             && !neighbor->isReserverd(NexttimeStamp)
-             && !neighbor->isReserverd(currentCell->getTimeStamp())
-             && !neighbor->aRobotIsParkingHere)
+                && neighbor->value != CellValue::occupied
+                && !neighbor->isReserverd(NexttimeStamp)
+                && !neighbor->isReserverd(currentCell->getTimeStamp())
+                && !neighbor->aRobotIsParkingHere)
             {
                 neighbor->setParent(currentCell);
                 neighbor->visited = true;
