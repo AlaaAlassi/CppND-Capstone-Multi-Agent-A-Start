@@ -54,12 +54,19 @@ void Graphics::drawRobots()
 
         if (robot->isBusy())
         {
+            // show robot path
             for (auto const &cell : (robot->getPath()))
             {
                 Point rg = Point(cell->cartesianPosition.x, cell->cartesianPosition.y);
                 circle(_images.at(1), rg, robot->getRadius(), robotColor, 2, LINE_8);
             }
+
+            // show robot task
+            Point rg = Point(robot->getParkingCell()->cartesianPosition.x,robot->getParkingCell()->cartesianPosition.y);
+            circle(_images.at(1), rg, robot->getRadius()*0.5, cv::Scalar(0, 0, 0), 2, LINE_8);
         }
+
+        // show the robot
         Point rp = Point(robot->getPosition().x, robot->getPosition().y);
         circle(_images.at(1), rp, robot->getRadius(), robotColor, FILLED, LINE_8);
     }
