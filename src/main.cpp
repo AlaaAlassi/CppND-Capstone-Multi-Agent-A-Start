@@ -30,11 +30,11 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     }
 
     for(int j=7;j<=16;j++){
-        tasks.emplace_back(map->getCell(3, j), map->getCell(0, 0));
+        tasks.emplace_back(map->getCell(7, j), map->getCell(0, 0));
     }
 
     for(int j=7;j<=16;j++){
-        tasks.emplace_back(map->getCell(5, j), map->getCell(0, 0));
+        tasks.emplace_back(map->getCell(9, j), map->getCell(0, 0));
     }
 
     Planner multiAgentPlanner(map);
