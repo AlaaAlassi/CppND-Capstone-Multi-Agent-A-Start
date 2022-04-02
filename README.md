@@ -11,4 +11,4 @@ the robots should not collide with each other while navigating to their tasks.
 ### shortest path: 
 the robots should navigate to the task using the shortest path if when possible.
 
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/collisionTestPic.png)
+![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png)
