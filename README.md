@@ -9,6 +9,6 @@ A fleet of robots has to fulfill a pool of tasks, the problem is solved when all
 ### collisions: 
 the robots should not collide with each other while navigating to their tasks.
 ### shortest path: 
-the robots should navigate to the task using the shortest path if when possible.
+the robots should navigate to the task using the shortest path when possible.
 
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png)
