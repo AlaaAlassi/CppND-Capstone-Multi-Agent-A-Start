@@ -16,6 +16,11 @@ the same timestep (called a swapping conflict)" [1]
 * The space (the map) is sedcrtices into equall equal size cells. 
 * Time is discretized into timesteps. At each timestep, a robot can move to a neighboring cell on the map. 
 
+# Collsiion Tests 
+## test 1 failing
+![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif)
+## test 1 passing
+![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif)
 
 # References 
 [1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.
