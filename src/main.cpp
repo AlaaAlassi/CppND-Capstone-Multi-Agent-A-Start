@@ -82,15 +82,15 @@ int main(int argc, char **argv)
         if (i%2 == 0){
             fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
         }else{
-            fleet.emplace_back(std::make_shared<Robot>(i+19, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
+            fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
         }
     }
 
     for(int i=1;i<=19;i++){
         if (i%2 != 0){
-            fleet.emplace_back(std::make_shared<Robot>(i, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
+            fleet.emplace_back(std::make_shared<Robot>(i+19, warehouse._map.getCell(i, 2), warehouse._map.getCellSize() * 0.5));
         }else{
-            fleet.emplace_back(std::make_shared<Robot>(i+19+19, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
+            fleet.emplace_back(std::make_shared<Robot>(i+19, warehouse._map.getCell(i, 32), warehouse._map.getCellSize() * 0.5));
         }
     }
 
