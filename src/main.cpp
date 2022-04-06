@@ -98,11 +98,14 @@ int main(int argc, char **argv)
         }
     }
 
-
-
+    // start viwer thread
     viewer.setRobots(fleet);
     viewer.loadBackgroundImg();
     std::thread simulationThread(&Graphics::run, &viewer);
+
+    // wait for 1 sec before starting Planning and Execution
+    this_thread::sleep_for(chrono::milliseconds(1000));
+
     shared_ptr<deque<shared_ptr<Robot>>> busyRobots = std::make_shared<deque<shared_ptr<Robot>>>();
     shared_ptr<GenericQueue<shared_ptr<Robot>>> availableRobots = std::make_shared<GenericQueue<shared_ptr<Robot>>>();
 
