@@ -17,6 +17,8 @@ using namespace cv;
 const int MAX_MONITOR_LENGTH = 1080;
 const int MAX_MONITOR_WIDTH = 1920;
 
+std::mutex mtx;
+
 void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots, shared_ptr<deque<shared_ptr<Robot>>> busyRobots, Map *map)
 {
 
@@ -40,7 +42,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     Planner multiAgentPlanner(map);
     int minDuration = 0;
     int maxDuration = 20;
-    std::mutex mtx;
+
     int t0 = 0;
     typedef std::chrono::duration<int, std::ratio<1, 1>> _Frame_duration;
     auto tic0 = std::chrono::steady_clock::now();
@@ -48,9 +50,12 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
     {
         auto tic = std::chrono::steady_clock::now();
         shared_ptr<Robot> rob = avialableRobots->receive();
+        unique_lock<mutex> uL(mtx);
         std::cout << "[Planning thread] recived robot #" << rob->getID() << std::endl;
+        uL.unlock();
         if (!tasks.empty())
         {
+
             auto end_time = tic + _Frame_duration(1);
             std::this_thread::sleep_until(end_time);
             auto tStamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - tic0);
@@ -58,11 +63,10 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
             bool pathFound = multiAgentPlanner.planPath(rob, tasks.front(), t0);
             if(pathFound){
                 tasks.pop_front();
-                lock_guard<mutex> lg(mtx);
-                busyRobots->push_back(std::move(rob));
-            }else{
-                busyRobots->push_back(std::move(rob));
             }
+            uL.lock();
+            busyRobots->push_back(std::move(rob));
+            uL.unlock();
         }
     }
 }
@@ -109,21 +113,21 @@ int main(int argc, char **argv)
 
     std::thread pThread(&planningThread, availableRobots, busyRobots, &(warehouse._map));
 
-    std::mutex mtx;
     fleet.clear();
     std::vector<std::future<shared_ptr<Robot>>> moveThread;
     while (true)
     {
         unique_lock<mutex> uL(mtx);
-        if (!busyRobots->empty())
+        bool aRobotIsAvailable = !busyRobots->empty();
+        uL.unlock();
+        if (aRobotIsAvailable)
         {
+            uL.lock();
             shared_ptr<Robot> robot = std::move(busyRobots->front());
             busyRobots->pop_front();
-            uL.unlock();
             std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
+            uL.unlock();
             moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
-
-            // std::cout << "robot #" <<  << " is done" << std::endl;
         }
         for (int i = 0; i < moveThread.size(); i++)
         {
@@ -134,7 +138,7 @@ int main(int argc, char **argv)
             };
         }
 
-        // this_thread::sleep_for();
+         this_thread::sleep_for(chrono::milliseconds(1));
     }
 
     std::cout << "exit" << std::endl;
