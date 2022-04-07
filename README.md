@@ -26,5 +26,8 @@ the same timestep (called a swapping conflict)" [1]
 ## test 2 passing
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestPassing.gif)
 
+# Warehouse Demo
+![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif)
+
 # References 
 [1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.
