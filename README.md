@@ -28,6 +28,7 @@ the same timestep (called a swapping conflict)" [1]
 
 # Warehouse Demo
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif)
+![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/Queue.drawio.png)
 
 ## Rubric
 
