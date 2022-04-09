@@ -126,7 +126,7 @@ int main(int argc, char **argv)
         if (aRobotIsAvailable)
         {
             uL.lock();
-            shared_ptr<Robot> robot = std::move(busyRobots->front());
+            auto robot = std::move(busyRobots->front());
             busyRobots->pop_front();
             std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             uL.unlock();
