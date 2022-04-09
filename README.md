@@ -6,7 +6,7 @@ A C++ implantation for Multi-Label A* Algorithm for Multi Agent Path finding
 # Problem Definition
 A fleet of robots has to fulfill a pool of tasks, the problem is solved when all tasks are fulfilled.
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png)
-## Constraints:
+## Constraints::heavy_check_mark:
 * The robots should not collide with each other while navigating to their tasks. "A
 collision occurs iff two agents occupy the same location at
 the same timestep (called a vertex conflict) or traverse the same edge in opposite directions at
@@ -82,10 +82,10 @@ __Concurrency__
 
 |DONE | CRITERIA | MEETS SPECIFICATIONS| WHERE |
 |-- | -- | --| -- |
-| | The project uses multithreading. | The project uses multiple threads in the execution.| |
-|  | A promise and future is used in the project. | A promise and future is used to pass data from a worker thread to a parent thread in the project code.| |
-| :heavy_check_mark: | A mutex or lock is used in the project. | A mutex or lock (e.g. std::lock_guard or `std::unique_lock) is used to protect data that is shared across multiple threads in the project code.| used in Buffer extensively |
-|  | A condition variable is used in the project. | A std::condition_variable is used in the project code to synchronize thread execution.| |
+| :heavy_check_mark: | The project uses multithreading. | The project uses multiple threads in the execution.| main.cpp|
+| | A promise and future is used in the project. | A promise and future is used to pass data from a worker thread to a parent thread in the project code.| |
+| :heavy_check_mark: | A mutex or lock is used in the project. | A mutex or lock (e.g. std::lock_guard or `std::unique_lock) is used to protect data that is shared across multiple threads in the project code.|main.cpp and Robot Class|
+| :heavy_check_mark: | A condition variable is used in the project. | A std::condition_variable is used in the project code to synchronize thread execution.| GenericQueue.hpp |
 
 # References 
 [1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.
