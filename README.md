@@ -1,11 +1,17 @@
 # Multi-Agent-A-Star
-A C++ implantation for Multi-Label A* Algorithm for Multi Agent Path finding
+A C++ implantation for Multi-Agent A* Algorithm for Multi Agent Path planning.
+<p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif" />
+</p>
 
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif)
-
-# Problem Definition
-A fleet of robots has to fulfill a pool of tasks, the problem is solved when all tasks are fulfilled.
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png)
+# Overview
+This is the capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). In this project, I implemented a multi-agent A* path planner and an example application of the algorithm in an order fulfillment center. The puzzle is as follows;
+* In a warehouse, A fleet of robots has to fulfill a pool of tasks, the problem is solved when all tasks are fulfilled. 
+* The robots should not collide with each other nor should they collide with an obstacle in the warehouse while navigating to their task
+The problem components are illustrated in the figure below 
+<p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png" />
+</p>
 ## Constraints::heavy_check_mark:
 * The robots should not collide with each other while navigating to their tasks. "A
 collision occurs iff two agents occupy the same location at
