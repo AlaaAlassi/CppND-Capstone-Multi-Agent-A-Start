@@ -34,6 +34,11 @@ struct CellData
     void reserveCell()
     {
         visitHistory.push_front(_timeStamp);
+
+        // limit the number of reservations per cell to 5000 unit duration
+        if (visitHistory.size() > 5000){
+            visitHistory.pop_back();
+        }
     }
     void clearPassedTimeStampsSince(int timeStamp)
     {

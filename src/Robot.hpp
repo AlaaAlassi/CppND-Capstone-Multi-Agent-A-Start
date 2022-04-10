@@ -96,7 +96,6 @@ public:
     {
          cell->reserveCell();
         _path.push_front(cell);
-        //cell->clearPassedTimeStampsSince(t0);
     }
 
     shared_ptr<CellData> getParkingCell()
