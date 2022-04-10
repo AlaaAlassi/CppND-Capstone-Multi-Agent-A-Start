@@ -131,8 +131,13 @@ and the console will show that the tests are passing
 
 
 # Warehouse Demo
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif)
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/Queue.drawio.png)
+<p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif" />
+</p>
+<p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/Queue.drawio.png" />
+</p>
+
 
 ## Rubric
 
