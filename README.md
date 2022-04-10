@@ -33,7 +33,7 @@ Assumptions have been made to simplify the problem
 
 # Collsiion Tests 
 To validate if the algorthim is avoiding collisions two tests have been developed 
-the first tests examisn what is called swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
+the first test examines what is called a swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
 
  P<sub>a</sub>(t) = P<sub>b</sub> (t+1) AND P<sub>b</sub>(t) = P<sub>a</sub> (t+1)
  
@@ -48,12 +48,16 @@ This collision case can be simulated if we comment out line 68 in Planner.hpp
  make
  ./test/collisionTest 
  ```
- you should be able to see the robots colliding as in the animation below 
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif)
+ you should be able to see the robots colliding as the animation shows below
+ <p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif" />
+</p>
 
-and the console will show the test is failing 
+
+and the console will show that the test is failing 
 ```
-[==========] 2 tests from 1 test suite ran. (14295 ms total)
+[==========] 2 tests from 1 test suite ran. (14300 ms total)
+[  PASSED  ] 1 test.
 [  FAILED  ] 1 test, listed below:
 [  FAILED  ] CollisionTest.SwappingCellsTest
 ```
@@ -68,21 +72,63 @@ Now uncomment line 68 in Planner.hpp
  ./test/collisionTest 
  ```
  
-you should be able to see the robots are avoiding the collision as in the animation below 
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif)
+you should be able to see the robots are avoiding the collision as the animation shows below
+ <p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif" />
+</p>
 
-and the console will show the test is passing 
+and the console will show that the tests are passing 
+```
+[==========] 2 tests from 1 test suite ran. (16328 ms total)
+[  PASSED  ] 2 tests.
+```
+\
+The second test examines what is called a a vertex conflict, that is when two robots occupies the same location. Or as expressed mathmatically in [2] 
+
+ P<sub>a</sub>(t) = P<sub>b</sub> (t)
+ 
+This collision case can be simulated if we comment out line 67 in Planner.hpp
+ ```
+ //&& !neighbor->isReserverd(NexttimeStamp)
+ ```
+ buld the project and run the tests 
+ ```
+ make
+ ./test/collisionTest 
+ ```
+ you should be able to see the robots colliding as the animation shows below
+ <p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestFailing.gif" />
+</p>
+
+and the console will show that the second test is failing 
+```
+[==========] 2 tests from 1 test suite ran. (14278 ms total)
+[  PASSED  ] 1 test.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] CollisionTest.OccupyingSameCell
+```
+Now uncomment line 68 in Planner.hpp
+ ```
+ && !neighbor->isReserverd(NexttimeStamp)
+ ```
+ build the project and run the tests 
+ ```
+ make
+ ./test/collisionTest 
+ ```
+ 
+you should be able to see the robots are avoiding the collision as the animation shows below
+ <p align="center">
+  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestPassing.gif" />
+</p>
+
+and the console will show that the tests are passing 
 ```
 [==========] 2 tests from 1 test suite ran. (16328 ms total)
 [  PASSED  ] 2 tests.
 ```
 
-
-
-## test 2 failing
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestFailing.gif)
-## test 2 passing
-![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestPassing.gif)
 
 # Warehouse Demo
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif)
