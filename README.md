@@ -23,21 +23,62 @@ Assumptions have been made to simplify the problem
 * Time is discretized into timesteps. At each timestep, a robot can move to a neighboring cell on the map
 * All robots should move at the smae speed
 
-The algorthim 
+# Compile and build the project
+ ```
+ mkdir build
+ cd build 
+ cmake ..
+ make
+ ```
 
 # Collsiion Tests 
 To validate if the algorthim is avoiding collisions two tests have been developed 
 the first tests examisn what is called swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
 
-P_a(t) = P_b(t+1) AND P_b(t) = P_a(t+1) 
+ P<sub>a</sub>(t) = P<sub>b</sub> (t+1) AND P<sub>b</sub>(t) = P<sub>a</sub> (t+1)
+ 
 where *a* and *b* are distinct agents.
 
-
-
-## test 1 failing
+This collision case can be simulated if we comment out line 68 in Planner.hpp
+ ```
+ //&& !neighbor->isReserverd(currentCell->getTimeStamp())
+ ```
+ buld the project and run the tests 
+ ```
+ make
+ ./test/collisionTest 
+ ```
+ you should be able to see the robots colliding as in the animation below 
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif)
-## test 1 passing
+
+and the console will show the test is failing 
+```
+[==========] 2 tests from 1 test suite ran. (14295 ms total)
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] CollisionTest.SwappingCellsTest
+```
+
+Now uncomment line 68 in Planner.hpp
+ ```
+ && !neighbor->isReserverd(currentCell->getTimeStamp())
+ ```
+ build the project and run the tests 
+ ```
+ make
+ ./test/collisionTest 
+ ```
+ 
+you should be able to see the robots are avoiding the collision as in the animation below 
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif)
+
+and the console will show the test is passing 
+```
+[==========] 2 tests from 1 test suite ran. (16328 ms total)
+[  PASSED  ] 2 tests.
+```
+
+
+
 ## test 2 failing
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestFailing.gif)
 ## test 2 passing
