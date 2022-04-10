@@ -7,22 +7,33 @@ A C++ implantation for Multi-Agent A* Algorithm for Multi Agent Path planning.
 # Overview
 This is the capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). In this project, I implemented a multi-agent A* path planner and an example application of the algorithm in an order fulfillment center. The puzzle is as follows;
 * In a warehouse, A fleet of robots has to fulfill a pool of tasks, the problem is solved when all tasks are fulfilled. 
-* The robots should not collide with each other nor should they collide with an obstacle in the warehouse while navigating to their task
+* The robots should not collide with each other nor should they collide with an obstacle in the warehouse while navigating to their task.
+According to [1] "A collision occurs iff two agents occupy the same location at
+the same timestep (called a vertex conflict) or traverse the same edge in opposite directions at
+the same timestep (called a swapping conflict)" 
+
+
 The problem components are illustrated in the figure below 
 <p align="center">
   <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png" />
 </p>
-## Constraints::heavy_check_mark:
-* The robots should not collide with each other while navigating to their tasks. "A
-collision occurs iff two agents occupy the same location at
-the same timestep (called a vertex conflict) or traverse the same edge in opposite directions at
-the same timestep (called a swapping conflict)" [1]
-* The robots should navigate to the task using the shortest path when possible.
-## Assumtions:
-* The space (the map) is discretized into equal size cells. 
-* Time is discretized into timesteps. At each timestep, a robot can move to a neighboring cell on the map. 
+
+Assumptions have been made to simplify the problem 
+* The space (the map of the warehouse) is discretized into equal size cells 
+* Time is discretized into timesteps. At each timestep, a robot can move to a neighboring cell on the map
+* All robots should move at the smae speed
+
+The algorthim 
 
 # Collsiion Tests 
+To validate if the algorthim is avoiding collisions two tests have been developed 
+the first tests examisn what is called swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
+
+P_a(t) = P_b(t+1) AND P_b(t) = P_a(t+1) 
+where *a* and *b* are distinct agents.
+
+
+
 ## test 1 failing
 ![](https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif)
 ## test 1 passing
@@ -96,3 +107,4 @@ __Concurrency__
 
 # References 
 [1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.
+[2] Grenouilleau, Florian, Willem-Jan van Hoeve, and John N. Hooker. "A multi-label A* algorithm for multi-agent pathfinding." Proceedings of the International Conference on Automated Planning and Scheduling. Vol. 29. 2019.
