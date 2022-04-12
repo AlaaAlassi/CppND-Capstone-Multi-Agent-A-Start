@@ -8,7 +8,7 @@ A C++ implantation for Multi-Agent A* Algorithm for Multi Agent Path planning.
 This is the capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). In this project, I implemented a multi-agent A* path planner and an example application of the algorithm in an order fulfillment center. The puzzle is as follows;
 * In a warehouse, A fleet of robots has to fulfill a pool of tasks, the problem is solved when all tasks are fulfilled. 
 * The robots should not collide with each other nor should they collide with an obstacle in the warehouse while navigating to their task.
-According to [1] "A collision occurs iff two agents occupy the same location at
+According to [1] "A collision occurs if two agents occupy the same location at
 the same timestep (called a vertex conflict) or traverse the same edge in opposite directions at
 the same timestep (called a swapping conflict)" 
 
@@ -20,8 +20,8 @@ The problem components are illustrated in the figure below
 
 Assumptions have been made to simplify the problem 
 * The space (the map of the warehouse) is discretized into equal size cells 
-* Time is discretized into timesteps. At each timestep, a robot can move to a neighboring cell on the map
-* All robots should move at the smae speed
+* Time is discretized into time steps. At each timestep, a robot can move to a neighboring cell on the map
+* All robots should move at the same speed
 
 # Compile and build the project
  ```
@@ -32,8 +32,7 @@ Assumptions have been made to simplify the problem
  ```
 
 # Collsiion Tests 
-To validate if the algorthim is avoiding collisions two tests have been developed.
-To run the tests 
+To validate if the algorithm is avoiding collisions two tests have been developed.To run the tests 
 ```
  ./test/collisionTest 
 ```
@@ -44,7 +43,7 @@ and the console will show that the tests are passing
 [  PASSED  ] 2 tests.
 ```
 
-the first test examines what is called a swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
+The first test examines what is called a swapping conflict, which is when two robots swap their locations. Or as expressed mathematically in [2] 
 
  P<sub>a</sub>(t) = P<sub>b</sub> (t+1) AND P<sub>b</sub>(t) = P<sub>a</sub> (t+1)
  
@@ -54,10 +53,8 @@ This collision case can be simulated if we comment out line 68 in Planner.hpp
  ```
  //&& !neighbor->isReserverd(currentCell->getTimeStamp())
  ```
- buld the project and run the tests 
+ build the project and run the tests 
  ```
- cd build
- make
  ./test/collisionTest 
  ```
  you should be able to see the robots colliding as the animation shows below
@@ -88,7 +85,7 @@ you should be able to see the robots are avoiding the collision as the animation
 
 
 \
-The second test examines what is called a vertex conflict, that is when two robots occupies the same location. Or as expressed mathmatically in [2] 
+The second test examines what is called a vertex conflict, which is when two robots occupy the same location. Or as expressed mathematically in [2] 
 
  P<sub>a</sub>(t) = P<sub>b</sub> (t)
  
@@ -124,7 +121,7 @@ you should be able to see the robots are avoiding the collision as the animation
 
 
 # Warehouse Demo
-Now that we have validated the Multi Agent A* planner, we can utilze in an order fulfilment center scenario, where we have a of queue tasks and a queue of robots, and the demo shows how the robots can fulfil all the tasks without cliiding with each other or with the shelfs in the warehous.
+Now that we have validated the Multi-Agent A* planner, we can utilize it in an order fulfillment center scenario, where we have a queue of tasks and a queue of robots, and the demo shows how the robots can fulfill all the tasks without colliding with each other or with the shelves in the warehouse.
 run the demo 
 ```
 cd build
@@ -144,14 +141,18 @@ To figure below explains how the code components of the demo are connected toget
 * ```CellData.hpp/CellData.cpp``` CellData is a struct that represents the cells of the grid of the warehouse, and it stores the information about the cell that the planner needs 
 such as the index, Cartesian position, and the value of the cell {emptey,occupied,delivery,pickup}
 * ```Map.hpp``` The Map Class is composed of a vector of Objects of type CellData
-* ```Warehouse.hpp/Warehouse.cpp``` The Warehouse is a Class that is used generates the map.
+* ```Warehouse.hpp/Warehouse.cpp``` The Warehouse is a Class that is used to generates the map.
 * ```Robot.hpp``` The Robots (the colored circles) are objects of type Robot (class),  each object owns a shared pointer to the cellData object that the robot is parking at. In addition, it owns a queue of shared pointers of DataCell objects that represents the planned path. 
 * ```Planner.hpp``` The multiAgentPlanner is an object of type planner (class). It needs a robot instance, task and pointer to the Map to plan a path for the robot. 
 * ```GenericQueue.hpp``` The robots in the demo are circulating between the planning thread and the executing thread until all tasks in the queue are fulfilled. The planning thread blocks until a robot is available in the queue of the available robots, this queue is of type GenericQueue. 
 * ```Graphics.hpp/Graphics.cpp``` The viewer is an object of type Graphics (class).  This viewer owns a shared pointer to the map and to all the instances of Robot Class. The viewer runs in parallel in the simulation thread.
 
+## Remarks
+* The algorthim is a simplified version of the multi-label A* algorithm mentioned in [2]
+* The code is designed to be extensible, that is why the task object is defined as std::pair, because ideally, the robot should first navigate to a Pickup cell and then to a delivery cell or vice versa. However, I kept this feature outside the scope of this Capstone project.
+ 
 
-## Rubric
+# Rubric
 
 __README (All Rubric Points REQUIRED)__
 
@@ -210,5 +211,5 @@ __Concurrency__
 | :heavy_check_mark: | A condition variable is used in the project. | A std::condition_variable is used in the project code to synchronize thread execution.| GenericQueue.hpp |
 
 # References 
-[1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.
+[1] Li, Jiaoyang, et al. "Lifelong Multi-Agent Path Finding in Large-Scale Warehouses." AAMAS. 2020.\
 [2] Grenouilleau, Florian, Willem-Jan van Hoeve, and John N. Hooker. "A multi-label A* algorithm for multi-agent pathfinding." Proceedings of the International Conference on Automated Planning and Scheduling. Vol. 29. 2019.
