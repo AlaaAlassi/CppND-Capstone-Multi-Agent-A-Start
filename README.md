@@ -139,13 +139,14 @@ To figure below explains how the code components of the demo are connected toget
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/Queue.drawio.png" />
 </p>
 
-* CellData struct represents the cells of the grid of the warehouse, and it stores the information about the cell that the planner needs 
+* ```CellData.hpp/CellData.cpp``` CellData is a struct that represents the cells of the grid of the warehouse, and it stores the information about the cell that the planner needs 
 such as the index, Cartesian position, and the value of the cell {emptey,occupied,delivery,pickup}
-* The Map Class is composed of a vector of Objects of type CellData
-* The Robots (the colored circles) are objects of type Robot (class),  each object owns a shared pointer to the cellData object that the robot is parking at. In addition, it owns a queue of shared pointers of DataCell objects that represents the planned path. 
-* The multiAgentPlanner is an object of type planner (class). It needs a robot instance, task and pointer to the Map to plan a path for the robot. 
-* The robots in the demo are circulating between the planning thread and the executing thread until all tasks in the queue are fulfilled. The planning thread blocks until a robot is available in the queue of the available robots. 
-* The viewer is an object of type Graphics (class).  This viewer owns a shared pointer to the map and to all the instances of Robot Class. The viewer runs in parallel in the simulation thread.
+* ```Map.hpp``` The Map Class is composed of a vector of Objects of type CellData
+* ```Warehouse.hpp/Warehouse.cpp``` The Warehouse is a Class that is used generates the map.
+* ```Robot.hpp``` The Robots (the colored circles) are objects of type Robot (class),  each object owns a shared pointer to the cellData object that the robot is parking at. In addition, it owns a queue of shared pointers of DataCell objects that represents the planned path. 
+* ```Planner.hpp``` The multiAgentPlanner is an object of type planner (class). It needs a robot instance, task and pointer to the Map to plan a path for the robot. 
+* ```GenericQueue.hpp``` The robots in the demo are circulating between the planning thread and the executing thread until all tasks in the queue are fulfilled. The planning thread blocks until a robot is available in the queue of the available robots, this queue is of type GenericQueue. 
+* ```Graphics.hpp/Graphics.cpp``` The viewer is an object of type Graphics (class).  This viewer owns a shared pointer to the map and to all the instances of Robot Class. The viewer runs in parallel in the simulation thread.
 
 
 ## Rubric
