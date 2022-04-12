@@ -13,7 +13,7 @@ enum CellValue
 {
     emptey,
     occupied,
-    delivary,
+    delivery,
     pickup
 };
 struct CellData

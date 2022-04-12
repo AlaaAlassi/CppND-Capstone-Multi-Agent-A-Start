@@ -130,7 +130,7 @@ int main(int argc, char **argv)
             busyRobots->pop_front();
             std::cout << "[Execution thread] recived robot #" << robot->getID() << std::endl;
             uL.unlock();
-            moveThread.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, robot));
+            moveThread.emplace_back(async(std::launch::async, &Robot::trackPath, robot));
         }
         for (int i = 0; i < moveThread.size(); i++)
         {

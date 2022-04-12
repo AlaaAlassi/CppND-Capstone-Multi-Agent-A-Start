@@ -47,7 +47,7 @@ TEST(CollisionTest,SwappingCellsTest){
     multiAgentPlanner.planPath(rob1, task1, t0);
 
     //execute the planned path for rob1
-    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob1));
+    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackPath, rob1));
 
     // wait for one sec
     this_thread::sleep_for(chrono::milliseconds(1000));
@@ -62,7 +62,7 @@ TEST(CollisionTest,SwappingCellsTest){
     EXPECT_EQ(testMap.getCell(1,2)->getVisitHistory().size(), 1);
 
     //execute the planned path for rob2
-    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob2));
+    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackPath, rob2));
 
     // wait until all robots reach their destinations
         for (int i = 0; i < ExecutionThreads.size(); i++)
@@ -105,7 +105,7 @@ TEST(CollisionTest,OccupyingSameCell){
     multiAgentPlanner.planPath(rob1, task1, t0);
 
     //execute the planned path for rob1
-    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob1));
+    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackPath, rob1));
 
     // wait for one sec
     this_thread::sleep_for(chrono::milliseconds(1000));
@@ -120,7 +120,7 @@ TEST(CollisionTest,OccupyingSameCell){
     EXPECT_EQ(testMap.getCell(1,2)->getVisitHistory().size(), 1);
 
     //execute the planned path for rob2
-    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackNextPathPoint, rob2));
+    ExecutionThreads.emplace_back(async(std::launch::async, &Robot::trackPath, rob2));
 
     // wait until all robots reach their destinations
         for (int i = 0; i < ExecutionThreads.size(); i++)

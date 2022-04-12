@@ -105,7 +105,7 @@ void Graphics::drawCell(std::shared_ptr<CellData> cell, cv::Mat &image)
                   LINE_8,
                   shift);
     }
-    else if (cell->value == CellValue::delivary)
+    else if (cell->value == CellValue::delivery)
     {
         rectangle(image,
                   p1,

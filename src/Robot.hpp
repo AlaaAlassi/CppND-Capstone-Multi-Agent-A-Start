@@ -21,7 +21,7 @@ public:
     bool goalReached = false;
     std::mutex mtx;
 
-    shared_ptr<Robot> trackNextPathPoint()
+    shared_ptr<Robot> trackPath()
     {
         while (isBusy())
         {
