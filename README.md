@@ -150,6 +150,7 @@ such as the index, Cartesian position, and the value of the cell {emptey,occupie
 ## Remarks
 * The algorthim is a simplified version of the multi-label A* algorithm mentioned in [2]
 * The code is designed to be extensible, that is why the task object is defined as std::pair, because ideally, the robot should first navigate to a Pickup cell and then to a delivery cell or vice versa. However, I kept this feature outside the scope of this Capstone project.
+* It is possible that the planner fails to find a path for a certain robot-task pair, in this case, the task will be picked up by the next robot in the availableRobots queue.
  
 
 # Rubric
