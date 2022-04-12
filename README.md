@@ -45,6 +45,7 @@ This collision case can be simulated if we comment out line 68 in Planner.hpp
  ```
  buld the project and run the tests 
  ```
+ cd build
  make
  ./test/collisionTest 
  ```
@@ -67,10 +68,6 @@ Now uncomment line 68 in Planner.hpp
  && !neighbor->isReserverd(currentCell->getTimeStamp())
  ```
  build the project and run the tests 
- ```
- make
- ./test/collisionTest 
- ```
  
 you should be able to see the robots are avoiding the collision as the animation shows below
  <p align="center">
@@ -83,7 +80,7 @@ and the console will show that the tests are passing
 [  PASSED  ] 2 tests.
 ```
 \
-The second test examines what is called a a vertex conflict, that is when two robots occupies the same location. Or as expressed mathmatically in [2] 
+The second test examines what is called a vertex conflict, that is when two robots occupies the same location. Or as expressed mathmatically in [2] 
 
  P<sub>a</sub>(t) = P<sub>b</sub> (t)
  
@@ -92,10 +89,7 @@ This collision case can be simulated if we comment out line 67 in Planner.hpp
  //&& !neighbor->isReserverd(NexttimeStamp)
  ```
  buld the project and run the tests 
- ```
- make
- ./test/collisionTest 
- ```
+
  you should be able to see the robots colliding as the animation shows below
  <p align="center">
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/occupySameLocationTestFailing.gif" />
@@ -113,10 +107,6 @@ Now uncomment line 68 in Planner.hpp
  && !neighbor->isReserverd(NexttimeStamp)
  ```
  build the project and run the tests 
- ```
- make
- ./test/collisionTest 
- ```
  
 you should be able to see the robots are avoiding the collision as the animation shows below
  <p align="center">
@@ -131,12 +121,28 @@ and the console will show that the tests are passing
 
 
 # Warehouse Demo
+Now that we have validated the Multi Agent A* planner, we can utilze in an order fulfilment center scenario, where we have a of queue tasks and a queue of robots, and the demo shows how the robots can fulfil all the tasks without cliiding with each other or with the shelfs in the warehous.
+run the demo 
+```
+cd build
+./MAA-Star 
+```
+You should be able to to see this the creen below 
 <p align="center">
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/warehouseDemo3X.gif" />
 </p>
+
+## code structure
+To figure below explains how the code components of the demo are connected together 
 <p align="center">
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/Queue.drawio.png" />
 </p>
+
+* CellData struct represents the cells of the grid of the warehouse, and it stores the information about the cell that the planner needs 
+such as the index, Cartesian position, and the value {emptey,occupied,delivery,pickup}, 
+* The Map Class is composed of a vector of Objects of type CellData
+* The Robots (the colored circles) are objects of type Robot (Class),  each object owns a shared pointer to the cellData object that the robot is parking at. In addition, it owns a queue of shared pointers of the planned path. in addition to some functions such as trackPath() which is responsible for moving the robot in the planned path.
+
 
 
 ## Rubric
