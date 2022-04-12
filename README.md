@@ -20,7 +20,7 @@ The problem components are illustrated in the figure below
 
 Assumptions have been made to simplify the problem 
 * The space (the map of the warehouse) is discretized into equal size cells 
-* Time is discretized into time steps. At each timestep, a robot can move to a neighboring cell on the map
+* Time is discretized into time steps. At each time step, a robot can move to a neighboring cell on the map
 * All robots should move at the same speed
 
 # Compile and build the project
