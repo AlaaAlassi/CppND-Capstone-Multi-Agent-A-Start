@@ -8,12 +8,14 @@ using namespace std;
 class Robot : public std::enable_shared_from_this<Robot>
 {
 public:
-    Robot(int id, shared_ptr<CellData> cell) : _id(id){
+    Robot(int id, shared_ptr<CellData> cell) : _id(id)
+    {
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
         setNewPrkingCell(cell);
     };
-    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _radius(radius){
+    Robot(int id, shared_ptr<CellData> cell, double radius) : _id(id), _radius(radius)
+    {
         _position.x = cell->cartesianPosition.x;
         _position.y = cell->cartesianPosition.y;
         setNewPrkingCell(cell);
@@ -28,8 +30,8 @@ public:
             auto goal = _path.front()->cartesianPosition;
             setGoal(goal);
             goalReached = false;
-            int n= 500;
-            double stepingDistance = this->distanceToPoint(goal)/n;
+            int n = 500;
+            double stepingDistance = this->distanceToPoint(goal) / n;
             auto t0 = std::chrono::steady_clock::now();
             for (int i = 0; i < n; i++)
             {
@@ -42,7 +44,6 @@ public:
                 auto end_time = start_time + _Frame_duration(1);
                 std::this_thread::sleep_until(end_time);
             }
-            //cout << (std::chrono::steady_clock::now()-t0).count()/1000000<<"\n";
             goalReached = true;
             std::lock_guard<std::mutex> lck(mtx);
             _path.pop_front();
@@ -81,25 +82,32 @@ public:
         _goal = g;
     };
 
-    void setNewPrkingCell(shared_ptr<CellData> cell){
+    void setNewPrkingCell(shared_ptr<CellData> cell)
+    {
+
         resetParkingCell();
+        std::lock_guard<std::mutex> lck(mtx);
         _parkingCell = cell;
         _parkingCell->aRobotIsParkingHere = true;
     }
 
-    void resetParkingCell(){
-        if(_parkingCell != nullptr)
-        _parkingCell->aRobotIsParkingHere = false;
+    void resetParkingCell()
+    {
+        std::lock_guard<std::mutex> lck(mtx);
+        if (_parkingCell != nullptr)
+            _parkingCell->aRobotIsParkingHere = false;
     }
 
     void appendCellToPath(std::shared_ptr<CellData> cell, int t0)
     {
-         cell->reserveCell();
+        std::lock_guard<std::mutex> lck(mtx);
+        cell->reserveCell();
         _path.push_front(cell);
     }
 
     shared_ptr<CellData> getParkingCell()
     {
+        std::lock_guard<std::mutex> lck(mtx);
         return _parkingCell;
     }
     Cartesian2DPoint getPosition()
@@ -114,18 +122,23 @@ public:
         return _id;
     }
 
-    std::deque <std::shared_ptr<CellData>> getPath()
+    std::deque<std::shared_ptr<CellData>> getPath()
     {
+        std::lock_guard<std::mutex> lck(mtx);
         return _path;
     };
 
     bool isNotBusy()
     {
+        std::lock_guard<std::mutex> lck(mtx);
+
         return _path.empty();
     }
 
     bool isBusy()
     {
+        std::lock_guard<std::mutex> lck(mtx);
+
         return !_path.empty();
     }
 
@@ -134,7 +147,7 @@ private:
     int _id = 0;
     Cartesian2DPoint _goal = Cartesian2DPoint(_position.x, _position.y);
     double _radius = 10;
-    std::deque <std::shared_ptr<CellData>> _path;
+    std::deque<std::shared_ptr<CellData>> _path;
     shared_ptr<CellData> _parkingCell;
     thread t_;
     typedef std::chrono::duration<int, std::ratio<1, 520>> _Frame_duration;
