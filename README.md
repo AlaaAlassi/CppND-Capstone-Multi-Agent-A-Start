@@ -1,7 +1,7 @@
 # Multi-Agent-A-Star
 A C++ implantation for Multi-Agent A* Algorithm for Multi Agent Path planning.
 <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/firstTestRuning.gif" />
 </p>
 
 # Overview
@@ -15,7 +15,7 @@ the same timestep (called a swapping conflict)"
 
 The problem components are illustrated in the figure below 
 <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/problemDefinition.png" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/problemDefinition.png" />
 </p>
 
 Assumptions have been made to simplify the problem 
@@ -50,7 +50,7 @@ This collision case can be simulated if we comment out line 68 in Planner.hpp
  ```
  you should be able to see the robots colliding as the animation shows below
  <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/swapCellsTestFailed.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/swapCellsTestFailed.gif" />
 </p>
 
 
@@ -74,7 +74,7 @@ Now uncomment line 68 in Planner.hpp
  
 you should be able to see the robots are avoiding the collision as the animation shows below
  <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/firstTestRuning.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/firstTestRuning.gif" />
 </p>
 
 and the console will show that the tests are passing 
@@ -98,7 +98,7 @@ This collision case can be simulated if we comment out line 67 in Planner.hpp
  ```
  you should be able to see the robots colliding as the animation shows below
  <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestFailing.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/occupySameLocationTestFailing.gif" />
 </p>
 
 and the console will show that the second test is failing 
@@ -120,7 +120,7 @@ Now uncomment line 68 in Planner.hpp
  
 you should be able to see the robots are avoiding the collision as the animation shows below
  <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/occupySameLocationTestPassing.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/occupySameLocationTestPassing.gif" />
 </p>
 
 and the console will show that the tests are passing 
@@ -132,10 +132,10 @@ and the console will show that the tests are passing
 
 # Warehouse Demo
 <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/warehouseDemo3X.gif" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/warehouseDemo3X.gif" />
 </p>
 <p align="center">
-  <img src="https://github.com/AlaaAlassi/Multi-Label-A-Star/blob/finish-up/assets/Queue.drawio.png" />
+  <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/Queue.drawio.png" />
 </p>
 
 
