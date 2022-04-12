@@ -32,7 +32,18 @@ Assumptions have been made to simplify the problem
  ```
 
 # Collsiion Tests 
-To validate if the algorthim is avoiding collisions two tests have been developed 
+To validate if the algorthim is avoiding collisions two tests have been developed.
+To run the tests 
+```
+ ./test/collisionTest 
+```
+
+and the console will show that the tests are passing 
+```
+[==========] 2 tests from 1 test suite ran. (16328 ms total)
+[  PASSED  ] 2 tests.
+```
+
 the first test examines what is called a swapping conflict, that is when two robots sawp thier locations. Or as expressed mathmatically in [2] 
 
  P<sub>a</sub>(t) = P<sub>b</sub> (t+1) AND P<sub>b</sub>(t) = P<sub>a</sub> (t+1)
@@ -69,16 +80,13 @@ Now uncomment line 68 in Planner.hpp
  ```
  build the project and run the tests 
  
-you should be able to see the robots are avoiding the collision as the animation shows below
+you should be able to see the robots are avoiding the collision as the animation shows below.
+
  <p align="center">
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/firstTestRuning.gif" />
 </p>
 
-and the console will show that the tests are passing 
-```
-[==========] 2 tests from 1 test suite ran. (16328 ms total)
-[  PASSED  ] 2 tests.
-```
+
 \
 The second test examines what is called a vertex conflict, that is when two robots occupies the same location. Or as expressed mathmatically in [2] 
 
@@ -88,7 +96,7 @@ This collision case can be simulated if we comment out line 67 in Planner.hpp
  ```
  //&& !neighbor->isReserverd(NexttimeStamp)
  ```
- buld the project and run the tests 
+ build the project and run the tests 
 
  you should be able to see the robots colliding as the animation shows below
  <p align="center">
@@ -113,11 +121,6 @@ you should be able to see the robots are avoiding the collision as the animation
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/occupySameLocationTestPassing.gif" />
 </p>
 
-and the console will show that the tests are passing 
-```
-[==========] 2 tests from 1 test suite ran. (16328 ms total)
-[  PASSED  ] 2 tests.
-```
 
 
 # Warehouse Demo
@@ -127,8 +130,7 @@ run the demo
 cd build
 ./MAA-Star 
 ```
-You should be able to to see this the creen below 
-
+You should be able to see this on the screen below (this gif is 3X the actual speed, the robots in the demo are moving at a velocity of 1 cell/sec)
 <p align="center">
   <img src="https://github.com/AlaaAlassi/CppND-Capstone-Multi-Agent-A-Start/blob/main/assets/warehouseDemo3X.gif" />
 </p>
