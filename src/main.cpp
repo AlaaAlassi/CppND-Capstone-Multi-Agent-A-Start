@@ -73,7 +73,7 @@ void planningThread(shared_ptr<GenericQueue<shared_ptr<Robot>>> avialableRobots,
 
 int main(int argc, char **argv)
 {
-    // get visulize the warehouse
+    // visulize the warehouse
     Warehouse warehouse = Warehouse();
     double aspectRatio = 0.7;
     int windowWidth = int(aspectRatio * MAX_MONITOR_WIDTH);
@@ -114,10 +114,12 @@ int main(int argc, char **argv)
         availableRobots->send(std::move(robot));
     }
 
+    // launch planning thread
     std::thread pThread(&planningThread, availableRobots, busyRobots, &(warehouse._map));
-
     fleet.clear();
     std::vector<std::future<shared_ptr<Robot>>> moveThread;
+
+    // Execution Tread
     while (true)
     {
         unique_lock<mutex> uL(mtx);
