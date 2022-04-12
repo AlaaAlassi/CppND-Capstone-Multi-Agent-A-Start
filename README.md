@@ -23,6 +23,16 @@ Assumptions have been made to simplify the problem
 * Time is discretized into time steps. At each time step, a robot can move to a neighboring cell on the map
 * All robots should move at the same speed
 
+## Dependencies for Running Locally
+* cmake >= 2.8
+  * All OSes: [click here for installation instructions](https://cmake.org/install/)
+* make >= 4.1 (Linux, Mac)
+  * Linux: make is installed by default on most Linux distros
+* OpenCV >= 4.1
+  * The OpenCV 4.1.0 source code can be found [here](https://github.com/opencv/opencv/tree/4.1.0)
+* gcc/g++ >= 5.4
+  * Linux: gcc / g++ is installed by default on most Linux distros
+
 # Compile and build the project
  ```
  mkdir build
