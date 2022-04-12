@@ -42,7 +42,6 @@ void Graphics::drawRobots()
     // reset images
     _images.at(1) = _images.at(0).clone();
     _images.at(2) = _images.at(0).clone();
-    // create overlay from all traffic objects
     std::lock_guard<std::mutex> lg(mtx);
     for (auto &robot : _robots)
     {
