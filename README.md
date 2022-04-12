@@ -31,7 +31,7 @@ Assumptions have been made to simplify the problem
  make
  ```
 
-# Collsiion Tests 
+# Collision Tests 
 To validate if the algorithm is avoiding collisions two tests have been developed.To run the tests 
 ```
  ./test/collisionTest 
